@@ -1,0 +1,14 @@
+name = "dmsy_submission"
+version = "0.1.0"
+defaultTargets = ["Submission"]
+
+# Submission root (repo root): re-exports the lane's entrypoint `Race.bound` from `D.Main`.
+# Only path requirements — mathlib and the A0/B sources are resolved through `dmsy_d`'s own
+# manifest at the lane pin (d13f23b7), so no second mathlib checkout is fetched here.
+[[lean_lib]]
+name = "Submission"
+roots = ["Submission"]
+
+[[require]]
+name = "dmsy_d"
+path = "D"

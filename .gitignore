@@ -1,0 +1,13 @@
+# Lean/Lake build outputs — huge, regenerable
+.lake/
+*.olean
+*.ilean
+*.trace
+*.hash
+
+# Editor/backup debris
+*.bak
+*.bak.created_at
+
+# macOS
+.DS_Store

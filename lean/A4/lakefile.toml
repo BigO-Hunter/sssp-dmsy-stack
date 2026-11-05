@@ -1,0 +1,92 @@
+name = "dmsy_a4"
+version = "0.1.0"
+
+# `defaultTargets` names the library itself, so bare `lake build` builds the lib's
+# default facet = every root below.  (Naming no default at all is not enough: Lake
+# reports "no default targets configured" and builds nothing.  Pinning it to
+# ["A4.Main"] built only Main's import cone, leaving the 27 units that landed after
+# Main with no target — `lake build A4.TailIdentity` failed "unknown target".)
+defaultTargets = ["A4"]
+
+# Module names are `A4.*`; the *namespace* inside the modules is `Frontier.DMSY`,
+# per IMPLAN §2 (same convention as A1/A2/A3).  All units listed as roots so Lake
+# schedules same-package imports, and so `lake build A4.<unit>` resolves.  `A4.AxiomCheck`
+# is deliberately not a root: it is the
+# `lake env lean A4/AxiomCheck.lean` #print-axioms script, not a proof unit.
+# Order below is import-topological (each unit after the units it imports).
+[[lean_lib]]
+name = "A4"
+roots = [
+  "A4.Semantics",
+  "A4.Structural",
+  "A4.Transitive",
+  "A4.Size",
+  "A4.WDrop",
+  "A4.Window",
+  "A4.Rep",
+  "A4.ReachHyp",
+  "A4.ReachInv",
+  "A4.LoopFrontier",
+  "A4.SettleSweep",
+  "A4.ExecutionFrame",
+  "A4.Cascade",
+  "A4.FrontierOrder",
+  "A4.LemmaD",
+  "A4.LemmaV",
+  "A4.Provenance",
+  "A4.Stall",
+  "A4.RunTrace",
+  "A4.SweepTrace",
+  "A4.IStepTrace",
+  "A4.WriterTrace",
+  "A4.LastWriter",
+  "A4.OriginTrace",
+  "A4.Main",
+  "A4.ReturnClauses",
+  "A4.BpMonotonicity",
+  "A4.DrainedClauses",
+  "A4.NonDrainedBp",
+  "A4.LiveFloor",
+  "A4.ValueBpChain",
+  "A4.KeyLabFloor",
+  "A4.MergeRepair",
+  "A4.FixStale",
+  "A4.IdentityCover",
+  "A4.LowKeyClosure",
+  "A4.TailIdentity",
+  "A4.LoopBInv",
+  "A4.MintPreFloor",
+  "A4.BelowSeparator",
+  "A4.LeafFloor",
+  "A4.JointAssembly",
+  "A4.StepSplitFloor",
+  "A4.NoLoose",
+  "A4.ConeClosure",
+  "A4.PremLabelKey",
+]
+
+# Order matters: mathlib first so the lane pin (d13f23b7) wins over any re-stated
+# requirement in the path dependencies below.
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "d13f23b723b8a846827a245b89c10fc7d3f11612"
+
+[[require]]
+name = "dmsy"
+path = "../A0"
+
+# A4 is the recursion spine: it calls A1's base case (`A1.BaseCase.baseRun`),
+# A2's FindPivots (`A2.FPContract.fpRun`) and A3's pull (`A3.DStruct.pullRun`)
+# verbatim (IMPLAN §1: import, do not rebuild).
+[[require]]
+name = "dmsy_a1"
+path = "../A1"
+
+[[require]]
+name = "dmsy_a2"
+path = "../A2"
+
+[[require]]
+name = "dmsy_a3"
+path = "../A3"

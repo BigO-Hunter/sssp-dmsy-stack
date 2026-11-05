@@ -1,0 +1,34 @@
+name = "dmsy_d"
+version = "0.1.0"
+defaultTargets = ["D.Main"]
+
+# Module names are `D.*` (the *namespace* inside the modules is `Frontier.DMSY`,
+# per IMPLAN §2, same convention as A1–A4 and B).  `Frontier.RAMWitness`,
+# `Frontier.CHD.Dispatch` and its `Frontier.GateC`/`GateCCalc` closure are frozen
+# c-hd-proof sources, included byte-identical via relative symlinks (same convention
+# as A0's Frontier/ and B's); listed as roots so Lake schedules them.
+# `Frontier.RAMLogic` is reused from `dmsy_b` (B owns that module) and is
+# deliberately NOT symlinked here, to keep one provider per module.
+[[lean_lib]]
+name = "D"
+roots = ["D.Fallback", "D.Dispatch", "D.Bound", "D.Adapter", "D.Main",
+  "Frontier.RAMWitness", "Frontier.CHD.Dispatch", "Frontier.GateC", "Frontier.GateCCalc"]
+
+# Order matters: mathlib first so the lane pin (d13f23b7) wins over any re-stated
+# requirement in the path dependencies below.
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "d13f23b723b8a846827a245b89c10fc7d3f11612"
+
+# D reuses A0's Frontier.CostModel / Frontier.Spec (verbatim c-hd sources).
+[[require]]
+name = "dmsy"
+path = "../A0"
+
+# D reuses B's Frontier.RAMLogic (the `Runs` program logic) and consumes the DMSY
+# body's sparse-clause spec (package C's per-call cost + the joint Main.lean
+# assembly) as a hypothesis, CHD's `chdTarget_of_body` shape.
+[[require]]
+name = "dmsy_b"
+path = "../B"
