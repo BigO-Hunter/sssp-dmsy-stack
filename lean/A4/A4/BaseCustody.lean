@@ -184,6 +184,46 @@ theorem jointChain_of_steps_of_baseC (t : ℕ) (ht : 2 ≤ t)
       jointInv_base_of_entryCustody (hre hreach hl).1 hb (hre hreach hl).2)
     hrecur
 
+/-! ## Entry custody at the top, and the child-entry obstruction -/
+
+/-- **Entry custody at the top-level base call.**  `initLabels` is `⊤` off `{s}`, so the only
+finite label is the source, which `initD {s}` keys. -/
+theorem custody_top_base :
+    CustodyL (G := G) (s := s) (initLabels G s) (initD {s} (initLabels G s)) [] := by
+  intro v hv
+  by_cases hsv : v = s
+  · refine Or.inr ?_
+    rw [hsv]
+    simp only [initD_eq_some, if_pos (Finset.mem_singleton_self _)]
+    exact Option.some_ne_none _
+  · exfalso
+    have htop : initLabels G s v = (⊤ : WLab G s) := by simp [initLabels, hsv]
+    rw [htop] at hv
+    exact hv rfl
+
+/-! ## The child-entry obstruction (named, per the shared-carrier stop boundary)
+
+The premise this file needs at a level-`0` return is custody at `⟨c.d, initD c.S c.d, []⟩`.  For
+a **child** base call this is **not** derivable from the parent's exit custody, and it is almost
+certainly false at reachable states: the child's store is *fresh* — `initD c.S c.d` keys only the
+seeds — while `c.d` is the parent loop's label vector, finite at every vertex the parent's sweeps
+ever wrote, including vertices the parent already **settled** (their labels stay finite; only
+their keys are deleted, ★BM.15).  Such a vertex is (i) not in `c.S` (settled members leave the
+groups, BM.17; pulled keys are deleted), (ii) not settled in the child's own settlement log (the
+child's log starts empty), and (iii) not keyed in `initD c.S c.d` — so no escape of the custody
+disjunction survives.  The missing fact would be "a child's finite entry labels are exactly its
+seeds", which no field of `ChildOf`/`IStep`/`pullRun`/`fpRun` produces and which the engine's
+fresh-store-per-call structure contradicts.
+
+Consequence: `containR` at a **child's** level-`0` return is not closable by custody, and the
+base-side premise cannot be threaded through `ChildOf` — both stall together, exactly at the
+shared carrier named when this lane opened.  `custody_top_base` is the instance that does hold,
+so the top-level base call's `containR` is closed by this file's lemmas.  The child case belongs
+to the recur-side wave, where the carriers are the joint induction's own invariants
+(`ChildFloor`'s settlement completeness, the maintained frontier) — not custody over a fresh
+store, which is what the audit's hand proof actually uses at those program points.
+-/
+
 end DMSY
 end Frontier
 
@@ -196,4 +236,5 @@ end Frontier
 #print axioms Frontier.DMSY.base_custody_of_entry
 #print axioms Frontier.DMSY.base_containR_of_entryCustody
 #print axioms Frontier.DMSY.jointInv_base_of_entryCustody
+#print axioms Frontier.DMSY.custody_top_base
 #print axioms Frontier.DMSY.jointChain_of_steps_of_baseC

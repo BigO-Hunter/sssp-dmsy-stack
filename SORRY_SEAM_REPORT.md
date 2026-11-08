@@ -273,3 +273,25 @@ that the settlement log only grows. `jointChain_of_steps_of_base` (in `BaseRetur
 superseded by `jointChain_of_steps_of_baseC` (in `BaseCustody`).
 
 **Axiom count: unchanged — 89 audited, 6 on `sorryAx`**, all traced to `Main.lean:65`/`:80`.
+
+---
+
+## Entry custody: top closed, child obstruction named (2026-11-08, session 7)
+
+`BaseCustody.custody_top_base` (axiom-clean): the top-level base call's entry custody holds —
+`initLabels` is `⊤` off `{s}`, so the only finite label is the source, which `initD {s}` keys.
+The top-level base call's `containR` is therefore closed by `BaseCustody`'s lemmas.
+
+**The child-entry obstruction is named and binding** (module docstring, `BaseCustody`): entry
+custody at a *child* base call is not derivable from the parent's exit custody and is almost
+certainly false at reachable states — the child's store is *fresh* (`initD c.S c.d` keys only
+seeds) while `c.d` inherits finite labels at parent-settled vertices, which are neither in `c.S`
+(settled members leave the groups, BM.17; pulled keys deleted), nor settled in the child's own
+empty log, nor keyed.  So `Custody` does **not** thread through `ChildOf` — the shared-carrier
+stall named as this lane's stop boundary is reached, and `hbase` is **not** closed
+hypothesis-free: the base-side premise remains entry custody, which is load-bearing at children.
+The child case belongs to the recur-side wave, where the carriers are the joint induction's own
+invariants (settlement completeness, the maintained frontier) — exactly the program points the
+audit's hand proof drives through `ChildFloor`, not through custody over a fresh store.
+
+**Axiom count: unchanged — 89 audited, 6 on `sorryAx`**, all traced to `Main.lean:65`/`:80`.
