@@ -383,3 +383,18 @@ pattern.
 
 Remaining to `LabelFloorHyp`: half 2 (pivot-not-pulled members' non-abandonment, Lemma W's
 window) and the assembly. **Axiom count: unchanged — 89 audited, 6 on `sorryAx`.**
+
+---
+
+## Half 2 scoped: the wall is the audit's window argument (2026-11-08, session 12)
+
+`JointInduction` §3d.2 (doc-only, prose in a green module): half 2 cannot be derived from
+`istep_bInv` (that is the circle — it consumes `ChildLabelFloor`).  The sweep gate gives only
+"unchanged or `≥ lo`" (`sweepEvts_label_cases`), so a low label persists; the window must come
+from `LoopBInv B st` at the pre-state plus `BpChain` — and `BpChain` is the per-call `B'`
+monotonicity that `CORRECTED_PROOF` §8 item 5 flags as unproved even at sketch grade
+(`A4.ReturnClauses`: "the one genuinely inductive premise").  Scope recorded for the proof:
+carry `BpChain` + `LoopBInv B st`, read the unchanged case via `sweepEvts_label_cases`, floor
+the changed case by the gate (`lo = Bi = c.B ≥ st'.bp` via `BpChain`).
+
+**Axiom count: unchanged — 89 audited, 6 on `sorryAx`** (doc-only change).

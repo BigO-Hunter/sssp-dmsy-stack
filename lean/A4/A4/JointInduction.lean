@@ -330,6 +330,21 @@ theorem seed_of_expand_mem {d : Labels G s} {p : ℕ} {pl : Fin p → Finset (Fi
   rw [hc]
   exact mem_expand_of_group_low ⟨hpiv, hmem⟩ hypl hlt
 
+/-! ### 3d.2. Half 2 scoped: the wall is the audit's window argument itself
+
+`istep_bInv`/`istep_bInv_of_le` (`A4.LoopBInv`) maintain `LoopBInv` from `ChildLabelFloor st fo'`
+— so half 2 cannot be derived *from* them (that is the circle).  What the sweep gate actually
+gives (`sweepEvts_label_cases`) is "a label is *unchanged* or `≥ lo`": a not-expanded group
+member whose label was already low keeps its low label through the step, so the window must come
+from `LoopBInv B st` **at the pre-state** plus `BpChain` — and comparing `st.bp ≤ st'.bp` is the
+per-call `B'` monotonicity that `CORRECTED_PROOF` §8 item 5 flags as unproved even at sketch
+grade (`A4.ReturnClauses`: "`BpChain` is the one genuinely inductive premise here").  So half 2
+is not a lemma in `A4.BpMonotonicity`/`A4.ValueBpChain` — it **is** the audit's Lemma W window
+argument applied at post-sweep labels, i.e. the last genuinely open mathematical content on the
+base-side path.  Scope for its proof: carry `BpChain` (or the equivalent `bp ≤ st'.bp` per step)
+plus `LoopBInv B st` and read the unchanged-label case through `sweepEvts_label_cases`; the
+changed-label case is floored by the gate (`lo = Bi = c.B ≥ st'.bp` needs `BpChain`). -/
+
 /-! ## 4. The residual, stated once
 
 `StepFloor` is everything §8.1's Lemma W/V package delivers at one iteration, in the form
