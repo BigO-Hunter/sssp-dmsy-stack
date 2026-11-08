@@ -239,3 +239,37 @@ singleton, which would close `t = 1` if A2's contracts support it and would rest
 **Receipts after the change:** `lake build` green (2031 jobs); `a4_joint`, `lemma37Star`,
 `theoremT`, `a4_contract` still on `[propext, sorryAx, Classical.choice, Quot.sound]` (their bodies
 are the two named `sorry`s); audited total unchanged at 89 declarations / 6 on `sorryAx`.
+
+---
+
+## `containR` at level 0 — closed modulo entry custody (2026-11-08, session 6)
+
+New module `A4/A4/BaseCustody.lean` (build root); `lake build` green (2032 jobs); all eight
+declarations at `[propext, Classical.choice, Quot.sound]`.
+
+**The mechanism.** `A4.ReturnClauses.callOut_tail_containR` proves `containR` at a tail from
+`Custody` ("a live label is settled or queued", `CustodyL`). This file mirrors those gated-sweep
+custody lemmas for A1's **ungated** engine — `relaxEdge_custody`, `sweep_custody`,
+`iter_custody`, `loop_custody` — and reads the invariant at the base exit
+(`base_custody_of_entry`), then `base_containR_of_entryCustody` (same shape as the tail lemma;
+the bound hypothesis is not needed).
+
+**What remains, named once.** Custody must hold at the loop's *initial* state
+`⟨e.d, initD e.S e.d, [], e.B⟩`, where it reads: **every finite entry label is a seed**. It is
+true at the top-level base call (the top entry's labels are `initLabels`, `⊤` off `{s} = e.S`),
+and at child entries it is the same `Custody` the recur side already maintains
+(`A4.ReturnClauses.tail_custody`) — so it belongs to the `Reach`-strengthening, not to A1. It is
+**not** derivable from `CallPre + baseRun_lemma31`: a non-seed vertex can carry a finite entry
+label, be refused by every sweep of this call, and end up the tight relaxation target of a
+settled vertex whose label later dropped — written-never, keyed-never, yet `Relaxed` at the
+return (sketch-grade; not formalized). So `jointChain_of_steps_of_baseC` discharges `hbase` down
+to **entry custody alone** — `hbase` is *not* hypothesis-free, and that is the honest state: the
+premise is load-bearing, not slack.
+
+**Recorded resolution of the session's open unknown:** the induction did *not* need label
+monotonicity across iterations — the spec'd `LoopInvR` shape was replaced by `CustodyL`, whose
+step case needs only "writes happen through accepted relaxations, which insert" plus the fact
+that the settlement log only grows. `jointChain_of_steps_of_base` (in `BaseReturn`) is thereby
+superseded by `jointChain_of_steps_of_baseC` (in `BaseCustody`).
+
+**Axiom count: unchanged — 89 audited, 6 on `sorryAx`**, all traced to `Main.lean:65`/`:80`.
