@@ -82,7 +82,14 @@ the child left unsettled sits at or above the child's returned bound.
 
 The two halves of the joint induction meet exactly here: (2b) is `Lemma37Concl.bound` and
 `NoPrem` is Theorem T, and neither suffices alone (`bound` bounds *values*, the floor needs
-*labels*, and labels only decrease — hence the store-accuracy premise). -/
+*labels*, and labels only decrease — hence the store-accuracy premise).
+
+**Caveat, so nobody carries a false invariant.**  The *global* form of `ChildStoreTight` is not
+an engine invariant: at a drained leaf a vertex can be unsettled with a low label and no key at
+all (`A4.MintPreFloor.base_leaf_counterexample`), so the form the induction can carry is the
+group-restricted one — which is `ChildLabelFloor` itself.  The bridge below is therefore the
+*reason* the floor needs accuracy (the two §8.1 halves cannot be split), not an independent
+reduction of it. -/
 theorem childLabelFloor_of_storeTight {p : ℕ} {st : RState G s p} {fo' : CallOut G s}
     (hbound : ∀ y val, fo'.D y = some val → fo'.B' ≤ val ∨ fo'.Premature y val)
     (hnoPrem : ∀ x val, ¬ fo'.Premature x val)

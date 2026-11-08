@@ -125,15 +125,18 @@ module (build root), axiom-clean throughout (`[propext, Classical.choice, Quot.s
 * `JointInv` (the named IH body), `jointChain_iff`, `noPrem_of_mintValueBound`,
   `noPrem_recur_of_stepFloor` (Theorem T's recur half from the carried `LoopBInv`).
 
-**What is still open, named once instead of six times:** the `recur` obligation needs four
-carried invariants that `Reach` does not supply — `LoopBInv` (labels of residual members ≥
-running bound), `ChildStoreTight` (label↔store accuracy), `ChildFloor` (settled completeness),
-`StepSplit` (coverage). Each has a documented reason it is not free from `Run`/`Reach` alone:
-`Reach` carries only `WalkInv` (`Structural.reach_sound`), `CallPre`/`ChildOf` producers do not
-exist as reachability facts, `LabelKey` is refuted at engine states
+**What is still open, named once instead of six times:** the `recur` obligation needs carried
+invariants that `Reach` does not supply — `LoopBInv` (labels of residual members ≥ running
+bound), `ChildFloor` (settled completeness), `StepSplit` (coverage), and a *group-restricted*
+label↔store accuracy. The global accuracy form (`ChildStoreTight`) is itself false at drained
+leaves (`MintPreFloor.base_leaf_counterexample`), so the carriable form coincides with
+`ChildLabelFloor`; `childLabelFloor_of_storeTight` is the reason the two §8.1 halves cannot be
+split, not an independent reduction. Each premise has a documented reason it is not free from
+`Run`/`Reach` alone: `Reach` carries only `WalkInv` (`Structural.reach_sound`), no
+`CallPre`/`ChildOf` reachability producers exist, `LabelKey` is refuted at engine states
 (`PremLabelKey.labelKey_refuted_at_engine_state`), and the leaf instance of the floor is
-equivalent to `NoAbandonedBelow`, which `CallPre + baseRun_lemma31` do not force
-(`MintPreFloor.base_leaf_counterexample`). Closing these is the audit's Lemma W/V/Rep machinery
+equivalent to `NoAbandonedBelow`, which `CallPre + baseRun_lemma31` do not force.
+Closing these is the audit's Lemma W/V/Rep machinery
 for a real engine semantics; `a4_joint`/`theoremT` therefore keep their `sorry`s, with the
 obligation set now stated in one place.
 
