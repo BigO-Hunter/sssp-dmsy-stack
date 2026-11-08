@@ -171,3 +171,42 @@ positive, so at `t = 0` only the *top* entry fails `Lemma37Hyp` (`1 ≤ 0` false
 shows the child-size step is unavailable there). Verified statement: the induction is
 established for `2 ≤ t`; `a4_joint`'s `∀ t` still needs `t ∈ {0,1}`, open on the **size** step
 (Lemma 3.5's `|S_child| ≤ memCap t (l−1)`), not on vacuity.
+
+---
+
+## `containS` closed; the size step is exactly `t ≥ 2` (2026-11-08, session 4)
+
+New module `A4/A4/BaseContain.lean` (build root); `lake build` green (2031 jobs); every
+declaration at `[propext, Classical.choice, Quot.sound]` (`fpCap_zero` uses none at all).
+
+**`containS` at a level-`0` return — proved.** `base_containS`: an unsettled seed is still keyed.
+The mechanism is the engine's own: `𝒟` starts as `initD S d` (every seed keyed), an iteration
+deletes exactly the vertex it settles, and its sweep only inserts. So the file proves the
+missing engine lemma A1 lacked — **the ungated sweep never drops a key**
+(`relaxEdge_ne_none`, `sweep_ne_none`, `iter_ne_none`) — plus the invariant
+`LoopInvS := S ∖ settledSet ⊆ keys 𝒟` through the whole `Loop` (`loopInvS_iter`,
+`loop_loopInvS`). `jointChain_of_steps_of_baseS` therefore drops `containS`:
+**one** base-side gap remains (`containR`).
+
+**`containR` — still open, now precisely diagnosed.** `BInv.frontier` yields only a *path*
+witness (`∃ y ∈ keys 𝒟, OnPath y v`), never `v ∈ keys 𝒟`; the deciding fact is label
+**provenance** — `v`'s label is the value of an accepted relaxation at some settled vertex, which
+inserted `v`, and `v` unsettled ⇒ never a pull-min ⇒ never deleted. A1's `BInv` carries `fresh`
+but no provenance field, so this needs one more loop invariant, not another consequence of `BInv`.
+
+**The `t ∈ {0,1}` verdict — recommendation-ready.** `jointChain_of_steps` needs `2 ≤ t` for
+exactly one reason: the child-size step `pullCap t l + fpCap t ≤ memCap t (l−1)`. Since
+`memCap t (l−1) = t²·2^((l−1)t)` and `pullCap t l = t·2^((l−1)t)`, that inequality is equivalent
+to `fpCap t ≤ t(t−1)·2^((l−1)t)`, and `fpCap t = max 1 (t/3) ≥ 1`. So it holds **iff `t ≥ 2`** —
+proved as `pullCap_add_fpCap_le_memCap_iff`. Both low values fail by exactly the FindPivots
+singleton: `ReachHyp.pullCap_add_fpCap_gt_memCap_at_one` (t=1) and `sizeStep_fails_at_zero`
+(t=0, since `pullCap 0 l = 0`, `memCap 0 (l−1) = 0`, `fpCap 0 = 1`). Neither case is vacuous
+(the `t = 0` top entry fails `Lemma37Hyp`, but a level-0 child with `S = ∅` satisfies it), so
+`a4_joint : ∀ t` is **not** closable through this route at `t ∈ {0,1}`.
+
+Two ways out, both repo-owner decisions (the pinned statement is unchanged):
+(a) sharpen `childOf_seed_size` to `|S_child| ≤ pullCap t l`, dropping the singleton — would
+close `t = 1` if A2's contracts support it; or (b) add `2 ≤ t` to `a4_joint`'s antecedent, the
+parameter regime the paper's complexity discussion assumes anyway.
+
+**Axiom count: unchanged — 89 audited, 6 on `sorryAx`**, all traced to `Main.lean:65`/`:80`.
