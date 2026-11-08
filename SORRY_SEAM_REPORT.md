@@ -295,3 +295,35 @@ invariants (settlement completeness, the maintained frontier) — exactly the pr
 audit's hand proof drives through `ChildFloor`, not through custody over a fresh store.
 
 **Axiom count: unchanged — 89 audited, 6 on `sorryAx`**, all traced to `Main.lean:65`/`:80`.
+
+---
+
+## Recur wave opened: carrier correction + wave map (2026-11-08, session 8)
+
+`JointInduction` §1b (doc, compiled; all receipts unchanged and clean) records the wave plan and
+one correction the tree forces:
+
+**Carrier correction (proved, not editorial):** `ChildLabelFloor`/`LabelFloorHyp` as a *uniform*
+step premise is refuted by the tree itself — `MintPreFloor.not_childLabelFloor_base` refutes the
+floor whenever a residual group member is abandoned below the child's returned bound (Q12's
+child-interior channel), and `MintPreFloor.base_leaf_counterexample` is a formalized leaf where
+the floor's invariant `NoAbandonedBelow` fails under `CallPre + baseRun_lemma31` alone.  So the
+recur wave must carry the floor **group-restricted, inside the joint induction itself** (the
+audit's first-violation ordering supplies it exactly where the parent's invariant maintains it) —
+never as a free-standing hypothesis.  Any route that assumes `LabelFloorHyp` uniformly is dead on
+arrival; `childLabelFloor_of_storeTight`'s premise inherits the same restriction.
+
+**Wave order** (each mapped to its §8.1 case): (1) `ChildFloor` — Lemma d2, settlement
+completeness at one iteration; `istepTrace_childStep` reduces the per-step premise to it +
+`ChildStoreTight`.  (2) `LoopBInv` — Lemma V, no sub-`B'` values; via the group-restricted floor,
+`istep_bInv` + `prem_empty_recur` give the value bound and Theorem T's recur half.  (3)
+`StepSplit` — coverage/(J6), clause (1)'s loop invariant; `lemma37Hyp_of_reach` consumes it.
+Then `hrecur` assembles by `jointChain_of_steps`.
+
+**Status of the two open items:** the child-entry custody premise (`BaseCustody`) is discharged
+by this wave per the redirect — not by `Custody` (fresh-store obstruction on record there); the
+`containR` counterexample sketch for child base returns was **not formalized** (budget) — the
+sketch stands as recorded in `BaseCustody`'s docstring, and formalizing it would be a
+statement-level finding for the repo owner.
+
+**Axiom count: unchanged — 89 audited, 6 on `sorryAx`**, all traced to `Main.lean:65`/`:80`.

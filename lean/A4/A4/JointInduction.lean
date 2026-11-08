@@ -65,6 +65,35 @@ open Frontier.CHD
 
 variable {G : Graph} {s : Fin G.n}
 
+/-! ## 1b. Wave plan and carrier correction (2026-11-08, after `BaseCustody`)
+
+The recur wave's three carriers, in dependency order, each with the §8.1 case it serves:
+
+1. **`ChildFloor`** (Lemma d2 — settlement completeness at one iteration).  `JointAssembly.
+   istepTrace_childStep` reduces the per-step premise to `ChildFloor` + `ChildStoreTight`, and
+   `BelowSeparator.childStep_of_floor` consumes it.  **Carrier correction:** `ChildLabelFloor` /
+   `LabelFloorHyp` as a *uniform* step premise is refuted — `MintPreFloor.not_childLabelFloor_base`
+   refutes the floor whenever a residual group member is abandoned below the child's returned
+   bound (Q12's child-interior channel), and `MintPreFloor.base_leaf_counterexample` is a
+   formalized leaf where the floor's invariant `NoAbandonedBelow` fails under `CallPre` +
+   `baseRun_lemma31` alone.  So the wave must carry the floor **group-restricted, inside the joint
+   induction itself** (the audit's first-violation ordering supplies it exactly where the
+   parent's invariant maintains it) — never as a free-standing hypothesis.
+2. **`LoopBInv`** (Lemma V — no sub-`B'` values at returns/filters).  Via the group-restricted
+   floor above: `istep_bInv` + `prem_empty_recur` give the value bound and Theorem T's recur half.
+3. **`StepSplit`** (coverage / (J6), clause (1)'s loop invariant).  `LoopFrontier.
+   child_frontier_of_lInv` consumes it; it is the entry-side premise `lemma37Hyp_of_reach` needs.
+
+Then `hrecur` assembles by `jointChain_of_steps`, and both `Main` seams reduce to it.
+
+**Child-entry premise.**  The base-side premise of `jointChain_of_steps_of_baseC` (entry custody,
+`A4.BaseCustody`) is discharged by the recur wave's invariants per the redirect — **not** by
+`Custody`: the child's store is fresh over inherited labels, so custody does not thread through
+`ChildOf` (obstruction named in `A4.BaseCustody`'s docstring).  The `containR` counterexample
+sketch for child base returns (same docstring) was **not** formalized — budget; the sketch stands
+as recorded, and formalizing it would be a statement-level finding for the repo owner.
+-/
+
 /-! ## 2. The crux: `ChildLabelFloor` from store accuracy + the child's bound clause
 
 `A4.LoopBInv` reduced Theorem T to `ChildLabelFloor st fo'` (every residual group member the
