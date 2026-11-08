@@ -143,3 +143,29 @@ obligation set now stated in one place.
 **Axiom count: unchanged — 89 declarations audited, 6 on `sorryAx`** (`a4_joint`,
 `lemma37Star`, `theoremT`, `a4_contract`, `top_full_facts`, `top_exact_at`), all traced to
 `Main.lean:65`/`:80`. The new module adds 6 axiom-clean declarations.
+
+---
+
+## Base-return slice + the `t < 2` correction (2026-11-08, session 3)
+
+New module `A4/A4/BaseReturn.lean` (build root), all declarations
+`[propext, Classical.choice, Quot.sound]`.
+
+**8 of `Lemma37Concl`'s 11 clauses are now closed at a level-`0` return**, from A1 alone:
+`progress`, `settleComplete`, `uSubset` (A1's `Lemma31Concl` verbatim), `bound` (A1's cap law
+`B'⁺ ≤ dMin B 𝒟_final` read per key via `dMin_le_of_mem`, carve-out disjunct dead),
+`premInD`/`premShape`/`fullImmune` (vacuous — base returns mint nothing), `identity` (A1's
+identity with `carveKeys = ∅`), plus Theorem T's half `NoPrem`. `jointInv_base_of_package`
+assembles `JointInv` at a level-`0` return from those plus **three** clauses A1 does not deliver
+— (1) `frontier` at the entry bound, (3) `containS`, (3) `containR` — and
+`jointChain_of_steps_of_base` re-states the induction with `hbase` discharged down to those
+three. So the level-`0` obligation is now *one* place with *three* named gaps, not eleven.
+
+**Correction to the previous entry.** It claimed `JointChain t` is vacuous for `t < 2`
+"because `Lemma37Hyp` is unsatisfiable". That is **false**: `lTop 0 n = log₂ n` is usually
+positive, so at `t = 0` only the *top* entry fails `Lemma37Hyp` (`1 ≤ 0` false —
+`lemma37Hyp_zero_top_false`), while a level-`0` child with `S = ∅` satisfies it; and at `t = 1`
+`memCap 1 l = 2^l ≥ 1`, so nothing is vacuous (`ReachHyp.pullCap_add_fpCap_gt_memCap_at_one`
+shows the child-size step is unavailable there). Verified statement: the induction is
+established for `2 ≤ t`; `a4_joint`'s `∀ t` still needs `t ∈ {0,1}`, open on the **size** step
+(Lemma 3.5's `|S_child| ≤ memCap t (l−1)`), not on vacuity.

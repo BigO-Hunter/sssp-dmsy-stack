@@ -64,6 +64,7 @@ roots = [
   "A4.ConeClosure",
   "A4.PremLabelKey",
   "A4.JointInduction",
+  "A4.BaseReturn",
 ]
 
 # Order matters: mathlib first so the lane pin (d13f23b7) wins over any re-stated
