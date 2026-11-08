@@ -346,3 +346,24 @@ are no steps at all, so `hrecur` is never invoked on one. The first real instanc
 new theorem pins what it buys when it lands.
 
 **Axiom count: unchanged — 89 audited, 6 on `sorryAx`**, all traced to `Main.lean:65`/`:80`.
+
+---
+
+## Scoping slice: the wall located in A2/A3's vocabulary (2026-11-08, session 10)
+
+`JointInduction` §3d (doc-only, prose in a green module): the contract vocabulary **does** expose
+the membership half of the `resid ⊆ expand` linkage — `IStep`'s child entry is
+`c = ⟨Bi, expand st.d st.pl st.piv Si Bi, l-1, st.d⟩`, and `expand` puts every group member with
+`d v < Bi` into `c.S` whenever the group's pivot is pulled (`mem_expand_of_group_low`-shaped
+one-liner; drafted, **not landed** — compile verification cut off by host pressure, and an
+unverified lemma is worse than none; first line of the next session).
+
+**The wall moved and is now located exactly**, as two non-definitional halves:
+(1) the pivot-pulled side needs the pre-state fact `piv j ∈ Si ∧ piv j ∈ pl j` for the floor's
+groups (step bookkeeping à la `istepTrace_child_d`); (2) the pivot-not-pulled side has **no
+expansion** — those members' non-abandonment must come from Lemma W's window/bound-monotonicity
+content.  Plus the child's `Lemma37Concl.identity` (y ∈ c.S settles unless carve-out) + `NoPrem`.
+Each ingredient now has a named producer; together they are exactly the audit's joint
+first-violation induction, confirming the carrier correction.
+
+**Axiom count: unchanged — 89 audited, 6 on `sorryAx`** (doc-only change).

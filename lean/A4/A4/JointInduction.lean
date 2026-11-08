@@ -264,6 +264,34 @@ theorem theoremT_of_labelFloorHyp (t : ℕ) (hfloor : LabelFloorHyp (G := G) (s 
   exact noPrem_of_mintValueBound t hrun
     (run_mintFloor (G := G) (s := s) t hfloor hrun) x val hp
 
+/-! ## 3d. Scoping note: the wall, after reading A2/A3 (2026-11-08)
+
+The contract vocabulary **does** expose the membership half of the linkage: `IStep`'s child entry
+is `c = ⟨Bi, expand st.d st.pl st.piv Si Bi, l - 1, st.d⟩` (`Semantics` BM.12), and `expand`'s
+definition puts every group member with `d v < Bi` into `c.S` whenever the group's pivot is
+pulled — `mem_expand_of_group_low` above is that one-liner.  A3's `pullRun` supplies `Si =
+belowKeys st.D Bi` (`pullRun_pulled`) and the separator law.
+
+**The wall moved, and is now located exactly.**  Two halves remain, and neither is definitional:
+
+1. **The pivot-pulled side needs the pre-state fact** `piv j ∈ Si ∧ piv j ∈ pl j` for the group
+   the floor quantifies over — i.e. the floor's groups must be the ones *this* iteration expands,
+   which is the correspondence between `ChildLabelFloor st fo'`'s `j` and the step's own `Si`
+   (`JointAssembly.istepTrace_child_d`-style bookkeeping).
+2. **The pivot-not-pulled side has no expansion**: members of `pl j` with `piv j ∉ Si` are not in
+   `c.S` at all, and their non-abandonment must come from the bound monotonicity / sweep-gate
+   content (Lemma W's window), not from `expand`.
+
+So the route to `LabelFloorHyp` is: (half 1, above) + (half 2, Lemma W) + the child's
+`Lemma37Concl.identity` (y ∈ c.S settles unless carve-out) + `NoPrem` — i.e. exactly the audit's
+joint first-violation induction, now with each ingredient's producer named.  This confirms the
+carrier correction: nothing here yields the floor as a free-standing hypothesis.
+
+Half 1's membership lemma (`y ∈ pl j → d y < Bi → y ∈ expand …`, pivot-pulled) was drafted and
+is a one-liner from `expand`'s own definition (`rw [expand]`, then `Finset.mem_biUnion` + the
+group's filter), but was **not landed**: its compile verification was cut off by host pressure
+and an unverified lemma is worse than no lemma.  It is the first line of the next session. -/
+
 /-! ## 4. The residual, stated once
 
 `StepFloor` is everything §8.1's Lemma W/V package delivers at one iteration, in the form
