@@ -237,6 +237,33 @@ theorem jointChain_of_steps (t : ℕ) (ht : 2 ≤ t)
   intro e out hre hyp hrun
   exact key hrun hre (fun _ => hyp)
 
+/-! ## 3c. Wave slice (1): Theorem T from the group-restricted floor
+
+The wave's target, stated exactly.  `LabelFloorHyp` — the per-step `ChildLabelFloor`, i.e. the
+floor **exactly at the parent's residual groups** (the `PremLabelKey` reading) — gives the value
+bound at every run (`LoopBInv.run_mintFloor`), and the value bound is the whole of Theorem T
+(`noPrem_of_mintValueBound`).  No reachability is needed: the value bound holds for every run.
+
+**Scoping of the first instance (this slice's finding).**  The instance cannot be taken at an
+arbitrary leaf — `MintPreFloor.not_childLabelFloor_base` refutes the floor there whenever a
+residual group member is abandoned below the child's returned bound, and
+`base_leaf_counterexample` formalizes a leaf where the floor's invariant fails outright — and at
+the **top-level base call** there are no steps at all, so `hrecur` is never invoked on one.  The
+first real instance is therefore at a **recur step of a reachable run**, and its missing producer
+is exactly the parent-side linkage `MintPreFloor`'s closing note names: `resid j ⊆ expand … S_i B_i`
+(every residual group member lies in the child's seed expansion, hence settles unless it is the
+carve-out).  That linkage is the wall; this theorem pins what it buys when it lands. -/
+
+/-- **Theorem T from the group-restricted floor.**  Byte-identical `@TheoremT` statement; the
+premise is the wave's target (`LabelFloorHyp`, the floor at the parent's residual groups).  As a
+*uniform* statement the premise is refuted (`MintPreFloor.not_childLabelFloor_base`,
+`base_leaf_counterexample`), so this is the target of the wave, not its completion. -/
+theorem theoremT_of_labelFloorHyp (t : ℕ) (hfloor : LabelFloorHyp (G := G) (s := s) t) :
+    @TheoremT G s (@Reach G s t) (@Run G s t) := by
+  intro e out _hre hrun x val hp
+  exact noPrem_of_mintValueBound t hrun
+    (run_mintFloor (G := G) (s := s) t hfloor hrun) x val hp
+
 /-! ## 4. The residual, stated once
 
 `StepFloor` is everything §8.1's Lemma W/V package delivers at one iteration, in the form

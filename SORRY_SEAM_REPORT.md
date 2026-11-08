@@ -327,3 +327,22 @@ sketch stands as recorded in `BaseCustody`'s docstring, and formalizing it would
 statement-level finding for the repo owner.
 
 **Axiom count: unchanged — 89 audited, 6 on `sorryAx`**, all traced to `Main.lean:65`/`:80`.
+
+---
+
+## Wave slice (1): `theoremT_of_labelFloorHyp` — the target pinned (2026-11-08, session 9)
+
+`JointInduction.theoremT_of_labelFloorHyp` (axiom-clean): **byte-identical `@TheoremT` follows
+from `LabelFloorHyp` alone** — no reachability needed, since the value bound
+(`run_mintFloor`) holds for every run. This pins exactly what closes seam 2: the group-restricted
+floor at the parent's residual groups.
+
+**Scoping of the first instance (the slice's finding).** The instance cannot be taken at an
+arbitrary leaf (`not_childLabelFloor_base` refutes the floor there on an abandoned group member;
+`base_leaf_counterexample` formalizes a failing leaf) and at the **top-level base call** there
+are no steps at all, so `hrecur` is never invoked on one. The first real instance is at a
+**recur step of a reachable run**, and its missing producer is exactly the parent-side linkage
+`MintPreFloor`'s closing note names: `resid j ⊆ expand … S_i B_i`. That linkage is the wall; the
+new theorem pins what it buys when it lands.
+
+**Axiom count: unchanged — 89 audited, 6 on `sorryAx`**, all traced to `Main.lean:65`/`:80`.
