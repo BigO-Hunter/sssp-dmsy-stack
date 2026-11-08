@@ -210,3 +210,32 @@ close `t = 1` if A2's contracts support it; or (b) add `2 ≤ t` to `a4_joint`'s
 parameter regime the paper's complexity discussion assumes anyway.
 
 **Axiom count: unchanged — 89 audited, 6 on `sorryAx`**, all traced to `Main.lean:65`/`:80`.
+
+
+---
+
+## Statement transcription: `a4_joint` now carries `2 ≤ t` (2026-11-08, session 5)
+
+**Decision (coordinator, statement-level):** adopt recommendation (b) from the previous entry —
+`a4_joint` takes an antecedent `ht : 2 ≤ t`. Rationale on record: the paper's complexity
+discussion is the `2 ≤ t` regime, so the `∀ t` form was **our** flattening. This is a transcription
+correction toward what the paper proves (same class as the σ-subset fix), not a weakening for
+convenience; the conclusion `@JointChain G s t` is byte-identical.
+
+**Proof receipt for the boundary:** `BaseContain.pullCap_add_fpCap_le_memCap_iff` — the child-size
+step holds **iff** `2 ≤ t`. Below it the deficit is exactly the FindPivots singleton
+(`fpCap t = max 1 (t/3) ≥ 1`): `ReachHyp.pullCap_add_fpCap_gt_memCap_at_one` at `t = 1`, and
+`BaseContain.sizeStep_fails_at_zero` (+ `fpCap_zero`) at `t = 0`.
+
+**Boundary documented, not hidden:** at `t = 0` the top entry fails `Lemma37Hyp` outright
+(`BaseReturn.lemma37Hyp_zero_top_false`), while a level-`0` child with `S = ∅` still satisfies it —
+so `t = 0` is not vacuous — and at `t = 1` `memCap 1 l = 2^l ≥ 1` is satisfiable. The antecedent is
+therefore load-bearing, and the antecedent propagates to `lemma37Star`, `theoremT` and
+`a4_contract` (same seam); `A0`'s `A4Contract` definition is untouched.
+
+**Named sharpening follow-up (NOT attempted):** prove `|S_child| ≤ pullCap t l`, dropping the
+singleton, which would close `t = 1` if A2's contracts support it and would restore the `∀ t` form.
+
+**Receipts after the change:** `lake build` green (2031 jobs); `a4_joint`, `lemma37Star`,
+`theoremT`, `a4_contract` still on `[propext, sorryAx, Classical.choice, Quot.sound]` (their bodies
+are the two named `sorry`s); audited total unchanged at 89 declarations / 6 on `sorryAx`.

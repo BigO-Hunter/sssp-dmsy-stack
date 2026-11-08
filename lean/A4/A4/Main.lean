@@ -59,31 +59,46 @@ def JointChain (t : ℕ) : Prop :=
       Lemma37Concl (Full t) e out ∧ NoPrem e out
 
 /-- **A4's main theorem** (task key lemma 1): the corrected Lemma 3.7\* over reachable runs,
-with the Q12 carve-out and the Q9 closure, plus Theorem T's carve-out emptiness. -/
-theorem a4_joint (t : ℕ) (G : Graph) (s : Fin G.n) : @JointChain G s t := by
+with the Q12 carve-out and the Q9 closure, plus Theorem T's carve-out emptiness.
+
+**Parameter regime `2 ≤ t` (statement transcription, 2026-11-08).**  The joint induction's
+child-size step is Lemma 3.5's `|S_child| ≤ memCap t (l−1)`, which this development supplies from
+`childOf_seed_size` (`|S_child| ≤ pullCap t l + fpCap t`).  That step holds **iff `2 ≤ t`** —
+`BaseContain.pullCap_add_fpCap_le_memCap_iff` — and fails at both low values by exactly the
+FindPivots singleton (`fpCap t = max 1 (t/3) ≥ 1`): at `t = 1`
+(`ReachHyp.pullCap_add_fpCap_gt_memCap_at_one`) and at `t = 0`
+(`BaseContain.sizeStep_fails_at_zero`, since `pullCap 0 l = 0`, `memCap 0 (l−1) = 0`,
+`fpCap 0 = 1`).  `2 ≤ t` is the regime the paper's complexity discussion assumes; the `∀ t` form
+was our flattening, so this antecedent is a transcription correction, not a weakening.  The
+boundary is documented rather than hidden: at `t = 0` the top entry fails `Lemma37Hyp` outright
+(`BaseReturn.lemma37Hyp_zero_top_false`), while a level-`0` child with `S = ∅` still satisfies it,
+so `t = 0` is **not** vacuous.  Named sharpening follow-up (not attempted): prove
+`|S_child| ≤ pullCap t l`, dropping the singleton, which would close `t = 1` if A2's contracts
+support it, and would restore the `∀ t` form. -/
+theorem a4_joint (t : ℕ) (ht : 2 ≤ t) (G : Graph) (s : Fin G.n) : @JointChain G s t := by
   intro e out hre hyp hrun
   sorry -- the audit's joint first-violation induction (CORRECTED_PROOF §8.1)
 
 /-- **Corrected Lemma 3.7\*** (`Lemma37Star`, A0): frontier clause, bound+completeness clause
 with the Q12 carve-out, containment clause — over reachable entries (Q9). -/
-theorem lemma37Star (t : ℕ) (G : Graph) (s : Fin G.n) :
+theorem lemma37Star (t : ℕ) (ht : 2 ≤ t) (G : Graph) (s : Fin G.n) :
     @Lemma37Star G s t (@Reach G s t) (@Run G s t) (@Full G s t) := by
   intro e out hre hyp hrun
-  exact (a4_joint t G s e out hre hyp hrun).1
+  exact (a4_joint t ht G s e out hre hyp hrun).1
 
 /-- **Theorem T** (carve-out emptiness on the V5 engine, A0): `Prem = ∅` at every return of
 every reachable run.  Note this quantifies over *all* reachable runs, including `l = 0`
 (base runs have `mints = []`, so those cases are free). -/
-theorem theoremT (t : ℕ) (G : Graph) (s : Fin G.n) :
+theorem theoremT (t : ℕ) (ht : 2 ≤ t) (G : Graph) (s : Fin G.n) :
     @TheoremT G s (@Reach G s t) (@Run G s t) := by
   intro e out hre hrun x val hp
   sorry -- from `JointChain` + the `Lemma37Hyp` of reachable entries (audit §5, Theorem T)
 
 /-- **A4's interface theorem**: `A4Contract` (A0) — the corrected engine satisfies Lemma 3.7\*
 and Theorem T. -/
-theorem a4_contract (t : ℕ) (G : Graph) (s : Fin G.n) :
+theorem a4_contract (t : ℕ) (ht : 2 ≤ t) (G : Graph) (s : Fin G.n) :
     @A4Contract G s t (@Reach G s t) (@Run G s t) (@Full G s t) :=
-  ⟨lemma37Star t G s, theoremT t G s⟩
+  ⟨lemma37Star t ht G s, theoremT t ht G s⟩
 
 /-! ## Top-level support: labels stay `⊤` off the reachable set, keys never drop
 
@@ -438,7 +453,7 @@ theorem top_full_facts_gen (t : ℕ) (ht : 2 ≤ t) : ∀ {e : CallEntry G s} {o
         exact one_le_memCap (lt_of_lt_of_le (by norm_num) ht)
     have hrun' : Run t E (callOut (tail E.B E.S fo.W stf)) :=
       @Run.recur G s t E pp fo piv st0 stf qs hl hfp hpiv hst0 hloop hchildren
-    obtain ⟨hconc, hnoprem⟩ := a4_joint t G s E (callOut (tail E.B E.S fo.W stf)) hre hhyp hrun'
+    obtain ⟨hconc, hnoprem⟩ := a4_joint t ht G s E (callOut (tail E.B E.S fo.W stf)) hre hhyp hrun'
     have hU : (callOut (tail E.B E.S fo.W stf)).U = {v | G.Reachable s v} := by
       rw [hconc.identity, hbp, carveKeys_empty hnoprem E.S, Set.diff_empty,
         hS, Finset.coe_singleton, utilde_top_source]
