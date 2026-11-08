@@ -398,3 +398,19 @@ carry `BpChain` + `LoopBInv B st`, read the unchanged case via `sweepEvts_label_
 the changed case by the gate (`lo = Bi = c.B ≥ st'.bp` via `BpChain`).
 
 **Axiom count: unchanged — 89 audited, 6 on `sorryAx`** (doc-only change).
+
+---
+
+## BpChain determined: outcome (b) — per-step monotonicity available under sourced hypotheses (2026-11-08, session 13)
+
+`JointInduction` §3d.2 determination: `BpMonotonicity.istep_bp_mono` gives `st.bp ≤ st'.bp` per
+`IStep` from `SeedFloor st.bp c` + `SeedChildFloor c fo'`, and `istep_bp_mono_of_liveFloor`
+sources the first from `LiveFloor st` (`istep_seedFloor`). Half 2's assembly: carry `LiveFloor st`
++ `SeedChildFloor c fo'`, take the monotonicity, read the unchanged-label case through
+`sweepEvts_label_cases` with `LoopBInv B st`, floor the changed case by the gate
+(`lo = Bi = c.B ≥ st'.bp`). Still missing: the assembly itself + the sources of
+`LiveFloor`/`SeedChildFloor` at reachable steps — the next session's slices.
+
+Also registered: wound **2125609282** (containR base instance possibly false at child level-0
+returns; sketch-grade, formalizing it is the named next step). **Axiom count: unchanged — 89
+audited, 6 on `sorryAx`** (doc-only change to a compiled module).

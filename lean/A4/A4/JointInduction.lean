@@ -343,7 +343,18 @@ is not a lemma in `A4.BpMonotonicity`/`A4.ValueBpChain` — it **is** the audit'
 argument applied at post-sweep labels, i.e. the last genuinely open mathematical content on the
 base-side path.  Scope for its proof: carry `BpChain` (or the equivalent `bp ≤ st'.bp` per step)
 plus `LoopBInv B st` and read the unchanged-label case through `sweepEvts_label_cases`; the
-changed-label case is floored by the gate (`lo = Bi = c.B ≥ st'.bp` needs `BpChain`). -/
+changed-label case is floored by the gate (`lo = Bi = c.B ≥ st'.bp` needs `BpChain`). 
+**DETERMINATION (wave slice 2, 2026-11-08): outcome (b) — PARTIAL; per-step monotonicity is
+AVAILABLE under two sourced hypotheses.**  `BpMonotonicity.istep_bp_mono` gives `st.bp ≤ st'.bp`
+per `IStep` from `SeedFloor st.bp c` + `SeedChildFloor c fo'`, and
+`BpMonotonicity.istep_bp_mono_of_liveFloor` sources the first from `LiveFloor st`
+(`istep_seedFloor`).  Half 2's assembly is therefore: carry `LiveFloor st` + `SeedChildFloor
+c fo'` (the seed-restricted cousins of `LoopBInv`/`ChildLabelFloor`), take `st.bp ≤ st'.bp` from
+`istep_bp_mono_of_liveFloor`, read the unchanged-label case through `sweepEvts_label_cases` with
+`LoopBInv B st`, and floor the changed-label case by the gate (`lo = Bi = c.B ≥ st'.bp` via the
+monotonicity).  Still missing for `LabelFloorHyp`: the assembly itself, plus the sources of
+`LiveFloor`/`SeedChildFloor` at reachable steps — the next session's slices.
+-/
 
 /-! ## 4. The residual, stated once
 
