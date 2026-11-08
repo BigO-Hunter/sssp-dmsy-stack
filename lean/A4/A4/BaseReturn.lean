@@ -14,8 +14,8 @@ This file attacks the first: `hbase`, the `Lemma37Concl ∧ NoPrem` package at a
 
 ## What is proved here
 
-Eight of `Lemma37Concl`'s eleven clauses are **closed at a level-`0` return** from A1 alone
-(`baseRun_lemma31` at the `ReachBase` the entry contract supplies):
+Nine of `Lemma37Concl`'s eleven clauses are **closed at a level-`0` return** from A1 alone
+(`baseRun_lemma31` / `loop_bInv` at the `ReachBase` the entry contract supplies):
 
 * (2a) `progress`, `settleComplete`, `uSubset` — A1's `Lemma31Concl` verbatim;
 * (2b) `bound` — A1's cap law `B'⁺ ≤ dMin B 𝒟_final` read per key (`dMin_le_of_mem`), with the
@@ -23,18 +23,15 @@ Eight of `Lemma37Concl`'s eleven clauses are **closed at a level-`0` return** fr
 * (2b) `premInD`, `premShape`, `fullImmune` — vacuous, for the same reason;
 * (2c) `identity` — A1's settlement identity with `carveKeys = ∅` (`carveKeys_empty`), so
   `U = Ũ(B', S) ∖ ∅`;
+* (1) `frontier` — `BInv.frontier` is stated at `(settledSet st.evts, keys st.D)`, which *is*
+  the return record's `(U, keys D)` (A1's `loop_bInv` at the exit), so `base_frontier` is a
+  three-line read of the loop invariant;
 * Theorem T's half (`NoPrem`) — `base_no_prem`.
 
 ## What is not, and why
 
-Three clauses at a level-`0` return are **not** consequences of `CallPre + baseRun_lemma31`:
+Two clauses at a level-`0` return are **not** consequences of `CallPre + baseRun_lemma31`:
 
-* (1) `frontier` — `IsFrontier out.d' (Ũ(e.B,S)) out.U (keys out.D)`: every vertex of `Ũ` at the
-  *entry* bound is settled or reachable from a complete key.  A1 gives the frontier relation at
-  the *entry* (`CallPre.frontier`, with `Y = S`), and the return's `Y` is `keys 𝒟_final`; the
-  transfer is the audit's frontier-maintenance step (`A4.WDrop.BoundaryClosure` is its
-  entry-level half: it converts `CallPre.claimC` + a frontier into canonical-path visits at any
-  `bp ≤ B`, but the `Y` it consumes must be supplied).
 * (3) `containS` — `S ∖ (U ∪ K) ⊆ keys 𝒟_final`: the seeds the leaf did not settle are still
   queued.  This needs the pull chain's remainder law (`PullSpec.pulled`/`rest` composed along
   `Loop`), which A1 does not expose as a `baseRun`-level statement.
@@ -42,7 +39,7 @@ Three clauses at a level-`0` return are **not** consequences of `CallPre + baseR
   leaf's out-neighbours.  `boundaryClosure_of_CallPre` gives the *canonical-path* form; the
   keyed form needs the same `Y` the frontier clause needs.
 
-So `jointInv_base_of_package` takes exactly those three, and
+So `jointInv_base_of_package` takes exactly those two, and
 `jointChain_of_steps_of_base` re-states the induction with `hbase` discharged down to them.
 
 Credit: Lemma 3.1\*/3.7\* and the joint induction are DMSY's / the audit's (arXiv:2602.07868v1,
@@ -117,39 +114,44 @@ theorem base_fullImmune {t : ℕ} {e : CallEntry G s} {bout : BaseOut G s}
     Full t e (baseOut bout) → ∀ x val, ¬ (baseOut bout).Premature x val :=
   fun _ => base_no_prem t hb
 
-/-! ## The package: `hbase` down to the three clauses A1 does not deliver -/
+/-- (1) **The frontier clause at a level-`0` return.**  A1's `BInv.frontier` is stated at
+`(settledSet st.evts, keys st.D)` for `Ũ(e.B, S)` — verbatim the return record's fields
+(`baseOut` projects `d' = st.d`, `U = settledSet st.evts`, `D = st.D`), so the clause is A1's
+loop invariant read at the exit. -/
+theorem base_frontier {t : ℕ} {e : CallEntry G s} {bout : BaseOut G s}
+    (hre : ReachBase ⟨e.B, e.S, e.d, initD e.S e.d⟩)
+    (hb : baseRun t ⟨e.B, e.S, e.d, initD e.S e.d⟩ bout) :
+    IsFrontier (baseOut bout).d' (Utilde e.B (e.S : Set (Fin G.n)))
+      (baseOut bout).U (DS.keys (baseOut bout).D) := by
+  obtain ⟨c, st, hloop, hr⟩ := hb
+  subst hr
+  exact (loop_bInv hloop (bInv_init hre)).frontier
 
-/-- **The level-`0` return obligation, modulo the three un-delivered clauses.**  Everything
-`Lemma37Concl` asks at a base return is supplied except the frontier (1), `containS` and
-`containR` — the audit's frontier-maintenance and pull-remainder content. -/
+/-! ## The package: `hbase` down to the two clauses A1 does not deliver -/
+
+/-- **The level-`0` return obligation, modulo the two un-delivered clauses.**  Everything
+`Lemma37Concl` asks at a base return is supplied except `containS` and `containR` — the pull
+remainder and the keyed boundary closure. -/
 theorem jointInv_base_of_package {t : ℕ} {e : CallEntry G s} {bout : BaseOut G s}
     (hre : ReachBase ⟨e.B, e.S, e.d, initD e.S e.d⟩)
     (hb : baseRun t ⟨e.B, e.S, e.d, initD e.S e.d⟩ bout)
-    (hfrontier : IsFrontier (baseOut bout).d' (Utilde e.B (e.S : Set (Fin G.n)))
-      (baseOut bout).U (DS.keys (baseOut bout).D))
     (hcontainS : ((e.S : Set (Fin G.n)) \
       ((baseOut bout).U ∪ (baseOut bout).carveKeys e.S)) ⊆ DS.keys (baseOut bout).D)
     (hcontainR : ∀ v, v ∈ Relaxed (baseOut bout).d' e.B (baseOut bout).U →
       (baseOut bout).B' ≤ (baseOut bout).d' v → v ∈ DS.keys (baseOut bout).D) :
     JointInv t e (baseOut bout) := by
-  refine ⟨⟨hfrontier, base_progress hre hb, base_settleComplete hre hb,
+  refine ⟨⟨base_frontier hre hb, base_progress hre hb, base_settleComplete hre hb,
     base_uSubset hre hb, base_bound hre hb,
     (base_premEmpty hb).2.1, (base_premEmpty hb).2.2, base_fullImmune hb,
     base_identity hre hb, hcontainS, hcontainR⟩, base_no_prem t hb⟩
 
-/-- **The induction with `hbase` discharged to the three named clauses.**  `jointChain_of_steps`
-takes `hbase` as an obligation; here it is produced from `ReachBase` plus the three clauses that
-A1 does not deliver. -/
+/-- **The induction with `hbase` discharged to the two remaining clauses.** -/
 theorem jointChain_of_steps_of_base (t : ℕ) (ht : 2 ≤ t)
     (hcs : ∀ (B : WLab G s) (l : ℕ) {p : ℕ} (st₁ st₂ : RState G s p)
       (c : CallEntry G s) (fo' : CallOut G s), IStep t B l st₁ st₂ c fo' → ChildStep B st₁ st₂ fo')
     (hsplit : ∀ (B : WLab G s) (l : ℕ) (S : Finset (Fin G.n)), StepSplit t B l S)
     (hre : ∀ {e : CallEntry G s}, Reach t e → e.l = 0 →
       ReachBase ⟨e.B, e.S, e.d, initD e.S e.d⟩)
-    (hfrontier : ∀ {e : CallEntry G s} {bout : BaseOut G s},
-      ReachBase ⟨e.B, e.S, e.d, initD e.S e.d⟩ → baseRun t ⟨e.B, e.S, e.d, initD e.S e.d⟩ bout →
-        IsFrontier (baseOut bout).d' (Utilde e.B (e.S : Set (Fin G.n)))
-          (baseOut bout).U (DS.keys (baseOut bout).D))
     (hcontainS : ∀ {e : CallEntry G s} {bout : BaseOut G s},
       baseRun t ⟨e.B, e.S, e.d, initD e.S e.d⟩ bout →
         ((e.S : Set (Fin G.n)) \
@@ -169,8 +171,7 @@ theorem jointChain_of_steps_of_base (t : ℕ) (ht : 2 ≤ t)
     JointChain (G := G) (s := s) t :=
   jointChain_of_steps t ht hcs hsplit
     (fun hreach hl hb =>
-      jointInv_base_of_package (hre hreach hl) hb
-        (hfrontier (hre hreach hl) hb) (hcontainS hb) (hcontainR hb))
+      jointInv_base_of_package (hre hreach hl) hb (hcontainS hb) (hcontainR hb))
     hrecur
 
 /-! ## The `t < 2` boundary — a correction, checked
@@ -211,6 +212,7 @@ end Frontier
 /-! ## Axiom audit -/
 
 #print axioms Frontier.DMSY.lemma37Hyp_zero_top_false
+#print axioms Frontier.DMSY.base_frontier
 #print axioms Frontier.DMSY.base_progress
 #print axioms Frontier.DMSY.base_settleComplete
 #print axioms Frontier.DMSY.base_uSubset

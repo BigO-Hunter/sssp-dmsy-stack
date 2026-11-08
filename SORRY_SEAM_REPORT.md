@@ -151,15 +151,17 @@ obligation set now stated in one place.
 New module `A4/A4/BaseReturn.lean` (build root), all declarations
 `[propext, Classical.choice, Quot.sound]`.
 
-**8 of `Lemma37Concl`'s 11 clauses are now closed at a level-`0` return**, from A1 alone:
+**9 of `Lemma37Concl`'s 11 clauses are now closed at a level-`0` return**, from A1 alone
+(`base_frontier` reads `BInv.frontier` at the loop exit — it is stated at `(settledSet st.evts,
+keys st.D)`, verbatim the return record):
 `progress`, `settleComplete`, `uSubset` (A1's `Lemma31Concl` verbatim), `bound` (A1's cap law
 `B'⁺ ≤ dMin B 𝒟_final` read per key via `dMin_le_of_mem`, carve-out disjunct dead),
 `premInD`/`premShape`/`fullImmune` (vacuous — base returns mint nothing), `identity` (A1's
 identity with `carveKeys = ∅`), plus Theorem T's half `NoPrem`. `jointInv_base_of_package`
-assembles `JointInv` at a level-`0` return from those plus **three** clauses A1 does not deliver
-— (1) `frontier` at the entry bound, (3) `containS`, (3) `containR` — and
-`jointChain_of_steps_of_base` re-states the induction with `hbase` discharged down to those
-three. So the level-`0` obligation is now *one* place with *three* named gaps, not eleven.
+assembles `JointInv` at a level-`0` return from those plus the **two** clauses A1 does not
+deliver — (3) `containS` (pull remainder) and (3) `containR` (keyed boundary closure) — and
+`jointChain_of_steps_of_base` re-states the induction with `hbase` discharged down to those two.
+So the level-`0` obligation is now *one* place with *two* named gaps, not eleven.
 
 **Correction to the previous entry.** It claimed `JointChain t` is vacuous for `t < 2`
 "because `Lemma37Hyp` is unsatisfiable". That is **false**: `lTop 0 n = log₂ n` is usually
