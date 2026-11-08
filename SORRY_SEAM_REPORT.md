@@ -474,3 +474,15 @@ for residual members is unsourced (`LoopBInv` floors at `st.bp`, wrong direction
 needs the full-leaf dichotomy at the pre-child state = `LoopBInv`'s own maintenance). Both are
 the recur wave's `LoopBInv`/`ChildFloor` maintenance content — the base-side path ends here and
 the lanes merge there.
+
+---
+
+## `sweep_untouched_label` re-land attempt: reverted again — one tactic error from green (2026-11-08, session 18)
+
+Re-landed from the WIP draft with both known fixes applied; the module now fails on exactly ONE
+error: `JointInduction.lean:417:10: No goals to be solved` — at the `by_cases hc` NEG branch's
+`rw [if_neg hc]` inside the `have h1` block, i.e. the POS branch (`dsimp only` +
+`Function.update_of_ne (Ne.symm hd) …`) closes the `have` and the NEG branch finds no goals.
+Everything else in the module is clean. Next session: restructure h1's by-block (e.g. prove the
+update equation as a standalone `have` before the `by_cases`, or use `split` instead of
+`by_cases`) — 15 minutes, mechanical. The lemma stays OUT of the tree until it compiles.
