@@ -430,3 +430,20 @@ at capped exits as its own slice, or carry `SeedFloor`/`SeedChildFloor` as named
 (containR/2≤t pattern; recommendation recorded in §3d.2 for the repo owner).
 
 **Axiom count: unchanged — 89 audited, 6 on `sorryAx`** (doc-only change to a compiled module).
+
+---
+
+## Full-leaf half 2 scoped: the (R5)→group lift is real, not a one-liner (2026-11-08, session 15)
+
+`JointInduction` §3d.2 sharpened: `SeedChildFloor` (one seed's `dis ≤ B'`) does **not** lift to
+`ChildLabelFloor st (baseOut bout)` (∀ residual member y ∉ U: `B'⁺ ≤ bout.d' y`) by existence —
+the quantifier is over every group member, and the leaf only *lowers* labels
+(`bout.d' y ≤ st.d y`), so `LoopBInv B st`'s `st.bp ≤ st.d y` points the wrong way.  The true
+route is gated persistence: the leaf's sweeps are (E2)-gated, so an untouched member keeps
+`st.d y`, and `B'⁺ = c.B` (dichotomy) plus the separator law must give `c.B ≤ st.d y` for group
+members — half of `LoopBInv`'s maintenance again (the changed case); touched members need the
+gate `≥ lo`.  So the full-leaf case is *half 2 applied once more*, not a consequence of (R5).
+Recommendation unchanged (two-out), sharpened: **both regimes reduce to the same missing input —
+label persistence under gated sweeps below the running bound.**
+
+**Axiom count: unchanged — 89 audited, 6 on `sorryAx`** (doc-only change to a compiled module).

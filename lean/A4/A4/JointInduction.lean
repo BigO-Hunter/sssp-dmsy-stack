@@ -365,6 +365,19 @@ available exactly where the child's returned bound equals the separator (full le
 capped case is `CORRECTED_PROOF` §8-item-5 class — either prove `BpChain` at capped exits as its
 own slice, or carry `SeedFloor`/`SeedChildFloor` as the named premises (the containR/2≤t
 pattern; recommendation for the repo owner recorded here).
+
+**FULL-LEAF CASE SCOPED (2026-11-08): the (R5)→group lift is real, not a one-liner.**
+`SeedChildFloor` (one seed's `dis ≤ B'`) does not lift to `ChildLabelFloor st (baseOut bout)`
+(∀ residual member y ∉ U: `B'⁺ ≤ bout.d' y`) by existence: the quantifier is over every group
+member, and the leaf only *lowers* labels (`bout.d' y ≤ st.d y`), so `LoopBInv B st`'s
+`st.bp ≤ st.d y` points the wrong way.  The true route is gated-persistence: the leaf's sweeps
+are (E2)-gated, so an untouched member keeps `st.d y`, and `B'⁺ = c.B` (dichotomy) plus the
+separator law must give `c.B ≤ st.d y` for group members — which is half of `LoopBInv`'s
+maintenance again (the changed case), while touched members need the gate `≥ lo`.  So the
+full-leaf case is *half 2 applied once more*, not a consequence of (R5); it waits on the same
+`BpChain`-at-capped/gated-exits input as the capped case.  Recommendation unchanged (two-out),
+now with the sharpened note that both regimes reduce to the same missing input: **label
+persistence under gated sweeps below the running bound**.
 -/
 
 /-! ## 4. The residual, stated once
