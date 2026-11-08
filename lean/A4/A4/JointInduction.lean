@@ -264,6 +264,18 @@ theorem theoremT_of_labelFloorHyp (t : ℕ) (hfloor : LabelFloorHyp (G := G) (s 
   exact noPrem_of_mintValueBound t hrun
     (run_mintFloor (G := G) (s := s) t hfloor hrun) x val hp
 
+/-- **The linkage, one half of it, from `expand`'s own definition** (`A4.Semantics`): if group
+`j`'s pivot is pulled (`piv j ∈ Si`) and `j` is live (`piv j ∈ pl j`), then every member of the
+group whose label is below the child's separator `Bi` **is** in the child's seed set. -/
+theorem mem_expand_of_group_low {d : Labels G s} {p : ℕ} {pl : Fin p → Finset (Fin G.n)}
+    {piv : Fin p → Fin G.n} {Si : Finset (Fin G.n)} {Bi : WLab G s} {j : Fin p} {y : Fin G.n}
+    (hpiv : piv j ∈ Si ∧ piv j ∈ pl j) (hy : y ∈ pl j) (hlt : d y < Bi) :
+    y ∈ expand d pl piv Si Bi := by
+  rw [expand]
+  refine Finset.mem_union_right _ ?_
+  exact Finset.mem_biUnion.mpr ⟨j, Finset.mem_univ j,
+    (by rw [if_pos hpiv]; exact Finset.mem_filter.mpr ⟨hy, hlt⟩)⟩
+
 /-! ## 3d. Scoping note: the wall, after reading A2/A3 (2026-11-08)
 
 The contract vocabulary **does** expose the membership half of the linkage: `IStep`'s child entry
@@ -310,6 +322,7 @@ end Frontier
 
 /-! ## 5. Axiom audit -/
 
+#print axioms Frontier.DMSY.mem_expand_of_group_low
 #print axioms Frontier.DMSY.jointChain_of_steps
 #print axioms Frontier.DMSY.childLabelFloor_of_storeTight
 #print axioms Frontier.DMSY.childLabelFloor_of_childBound
