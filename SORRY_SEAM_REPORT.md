@@ -461,3 +461,16 @@ direction), and `st.bp = c.B` needs the full-leaf dichotomy at the pre-child sta
 `LoopBInv`'s own maintenance again.  Half 2 at full leaves waits on: untouched-member persistence
 (easy, from `sweep`'s equations) + the separator law at `bp = B` (a `LoopBInv`-maintenance half).
 **Axiom count: unchanged — 89 audited, 6 on `sorryAx`** (doc-only change).
+
+---
+
+## WIP notes: half 2's persistence input (2026-11-08, session 17 — drafts, NOT in the tree)
+
+Draft `sweep_untouched_label` (verification starved by host SIGTERMs — A1's sweep, untouched
+destination ⟹ label preserved; ~15 lines, induction on `es`, cons case splits `src e = u`,
+needs `Function.update_of_ne (Ne.symm hd)` with the dependent-`β` form and `rw [if_pos hs,
+if_pos hs]` for the label+store ifs in the goal). Also scoped: the separator law `c.B ≤ st.d y`
+for residual members is unsourced (`LoopBInv` floors at `st.bp`, wrong direction; `st.bp = c.B`
+needs the full-leaf dichotomy at the pre-child state = `LoopBInv`'s own maintenance). Both are
+the recur wave's `LoopBInv`/`ChildFloor` maintenance content — the base-side path ends here and
+the lanes merge there.
