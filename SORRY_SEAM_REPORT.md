@@ -447,3 +447,17 @@ Recommendation unchanged (two-out), sharpened: **both regimes reduce to the same
 label persistence under gated sweeps below the running bound.**
 
 **Axiom count: unchanged — 89 audited, 6 on `sorryAx`** (doc-only change to a compiled module).
+
+---
+
+## Persistence lemma scoped: moved wall, two parts (2026-11-08, session 16)
+
+`JointInduction` §3d.2: the label-persistence input moved.  (i) At a base leaf the sweep is A1's
+**ungated** `relaxEdge`/`sweep` — a *touched* member's label can drop arbitrarily far below the
+running bound, so persistence holds only for **untouched** vertices; the gated form
+(`sweepEvts_label_cases`) belongs to the recur-side sweep.  (ii) The separator law `c.B ≤ st.d y`
+for residual members is **unsourced** — `LoopBInv B st` floors members at `st.bp ≤ c.B` (wrong
+direction), and `st.bp = c.B` needs the full-leaf dichotomy at the pre-child state, i.e.
+`LoopBInv`'s own maintenance again.  Half 2 at full leaves waits on: untouched-member persistence
+(easy, from `sweep`'s equations) + the separator law at `bp = B` (a `LoopBInv`-maintenance half).
+**Axiom count: unchanged — 89 audited, 6 on `sorryAx`** (doc-only change).

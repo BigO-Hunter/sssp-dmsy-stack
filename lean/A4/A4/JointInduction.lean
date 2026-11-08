@@ -366,6 +366,17 @@ capped case is `CORRECTED_PROOF` §8-item-5 class — either prove `BpChain` at 
 own slice, or carry `SeedFloor`/`SeedChildFloor` as the named premises (the containR/2≤t
 pattern; recommendation for the repo owner recorded here).
 
+**PERSISTENCE LEMMA SCOPED (2026-11-08): moved wall, two parts.**  (i) At a base leaf the sweep
+is A1's **ungated** `relaxEdge`/`sweep` (accept = `cand ≤ d dst ∧ cand < B`), so a *touched*
+member's label can drop arbitrarily far below the running bound — the persistence statement
+holds only for **untouched** vertices (`bout.d' y = st.d y`); the gated form
+(`sweepEvts_label_cases`: unchanged or `≥ lo`) belongs to the recur-side `RState` sweep, not to
+the leaf.  (ii) The separator law `c.B ≤ st.d y` for residual members is **unsourced**:
+`LoopBInv B st` floors members at `st.bp ≤ c.B` (wrong direction), and `st.bp = c.B` needs the
+full-leaf dichotomy *at the pre-child state* — `LoopBInv`'s own maintenance again.  Half 2 at
+full leaves waits on: untouched-member persistence (easy, from `sweep`'s equations) + the
+separator law at `bp = B` (a `LoopBInv`-maintenance half).  Both named, neither landed.
+
 **FULL-LEAF CASE SCOPED (2026-11-08): the (R5)→group lift is real, not a one-liner.**
 `SeedChildFloor` (one seed's `dis ≤ B'`) does not lift to `ChildLabelFloor st (baseOut bout)`
 (∀ residual member y ∉ U: `B'⁺ ≤ bout.d' y`) by existence: the quantifier is over every group
