@@ -367,3 +367,19 @@ Each ingredient now has a named producer; together they are exactly the audit's 
 first-violation induction, confirming the carrier correction.
 
 **Axiom count: unchanged — 89 audited, 6 on `sorryAx`** (doc-only change).
+
+---
+
+## Half 1 landed: the step's own expansion, unpacked (2026-11-08, session 11)
+
+`JointInduction.istep_unpack` (the mechanical seventeen-field `obtain` pinned as a lemma: a step
+determines its pull witnesses, and `c.S` is the step's own expansion) and
+`JointInduction.seed_of_expand_mem` (**half 1**: a residual-group member whose label is below the
+separator, in a group whose pivot is pulled, is in the child's seeds — `mem_expand_of_group_low`
+instantiated at the step's own `pl`/`piv`/`Si`/`Bi` through the child entry's defining equation).
+Both axiom-clean; `lake build` green (2032 jobs). The unpacking shape flagged as untried was
+tried and is correct: `IStep`'s existentials destructure exactly as `Main.lean`'s working
+pattern.
+
+Remaining to `LabelFloorHyp`: half 2 (pivot-not-pulled members' non-abandonment, Lemma W's
+window) and the assembly. **Axiom count: unchanged — 89 audited, 6 on `sorryAx`.**

@@ -304,6 +304,32 @@ is a one-liner from `expand`'s own definition (`rw [expand]`, then `Finset.mem_b
 group's filter), but was **not landed**: its compile verification was cut off by host pressure
 and an unverified lemma is worse than no lemma.  It is the first line of the next session. -/
 
+/-! ### 3d.1. Half 1 landed: the step's own expansion, unpacked -/
+
+/-- **The `IStep` unpacking**: a step determines its pull witnesses, and the child entry's seed
+set is the step's own expansion.  This is the mechanical `obtain` the half-1 instantiation needs,
+pinned as a lemma so callers do not repeat the seventeen-field destructure. -/
+theorem istep_unpack {t : ℕ} {B : WLab G s} {l : ℕ} {p : ℕ} {st st' : RState G s p}
+    {c : CallEntry G s} {fo' : CallOut G s} (h : IStep t B l st st' c fo') :
+    ∃ Si : Finset (Fin G.n), ∃ Bi : WLab G s, ∃ D1 : DS G s,
+      pullRun (pullCap t l) st.D B Si Bi D1 ∧
+        c = ⟨Bi, expand st.d st.pl st.piv Si Bi, l - 1, st.d⟩ := by
+  obtain ⟨Si, Bi, D1, -, -, -, -, -, -, hpull, hc, -, -, -, -, -, -⟩ := h
+  exact ⟨Si, Bi, D1, hpull, hc⟩
+
+/-- **Half 1, at the unpacked components**: a residual-group member whose label is below the
+separator and whose group's pivot is pulled is in the child's seeds.  This is
+`mem_expand_of_group_low` instantiated at the step's own `pl`/`piv`/`Si`/`Bi` through the child
+entry's defining equation. -/
+theorem seed_of_expand_mem {d : Labels G s} {p : ℕ} {pl : Fin p → Finset (Fin G.n)}
+    {piv : Fin p → Fin G.n} {Si : Finset (Fin G.n)} {Bi : WLab G s} {c : CallEntry G s}
+    {l : ℕ} (hc : c = ⟨Bi, expand d pl piv Si Bi, l - 1, d⟩)
+    {j : Fin p} {y : Fin G.n} (hpiv : piv j ∈ Si) (hmem : piv j ∈ pl j)
+    (hypl : y ∈ pl j) (hlt : d y < Bi) :
+    y ∈ c.S := by
+  rw [hc]
+  exact mem_expand_of_group_low ⟨hpiv, hmem⟩ hypl hlt
+
 /-! ## 4. The residual, stated once
 
 `StepFloor` is everything §8.1's Lemma W/V package delivers at one iteration, in the form
@@ -322,6 +348,8 @@ end Frontier
 
 /-! ## 5. Axiom audit -/
 
+#print axioms Frontier.DMSY.istep_unpack
+#print axioms Frontier.DMSY.seed_of_expand_mem
 #print axioms Frontier.DMSY.mem_expand_of_group_low
 #print axioms Frontier.DMSY.jointChain_of_steps
 #print axioms Frontier.DMSY.childLabelFloor_of_storeTight
