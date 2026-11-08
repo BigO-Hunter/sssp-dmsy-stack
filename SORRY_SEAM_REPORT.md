@@ -99,3 +99,44 @@ from the parent's `pullRun`/`expand`/`FPContract` residual groups).
 
 *Construction (DMSY, arXiv:2602.07868v1) is the original authors'; the durable copy, build
 harness, axiom audit and this closure attempt are ours.*
+
+---
+
+## §8.1 formalization WIP (2026-11-08, session 2) — `A4/A4/JointInduction.lean`
+
+The hand induction is now transcribed into the tree and its **shape** is machine-checked. New
+module (build root), axiom-clean throughout (`[propext, Classical.choice, Quot.sound]`):
+
+* **Transcription** (module docstring): the induction is on the **settlement-event index**
+  (batches of `U`), not on steps or mint depth (§4.4, `PROOF.md` §3); the two conjuncts
+  `settleComplete` (2a) and `NoPrem` (Theorem T) are joint because completeness ⇒ floor and
+  floor ⇒ next batch's completeness; the per-batch case split is W / V / Rep / `W'`-drop /
+  refusal-floor / d2, each mapped to the unit here that reduces it.
+* **`childLabelFloor_of_storeTight`** (the crux bridge, new): `ChildLabelFloor st fo'` follows
+  from the child's bound clause (2b) + `NoPrem` + store accuracy `ChildStoreTight`. This is
+  Lemma V at the child boundary read through the store — and it shows exactly why the two
+  clauses cannot be separated: `bound` constrains *values*, the floor needs *labels*, and labels
+  only decrease, so the accuracy invariant is load-bearing.
+* **`jointChain_of_steps`** (the wiring, new): `JointChain t` follows from (i) a level-`0`
+  return obligation, (ii) §8.1's `recur` step obligation taking the IH at every child, plus the
+  two entry-side premises `A4.JointAssembly` already isolates (`ChildStep`-uniform, `StepSplit`)
+  and `2 ≤ t` (at `t < 2` the `Lemma37Hyp` premise is unsatisfiable, so the statement is
+  vacuous). The motive is level-split because a reachable child may be a level-`0` entry.
+* `JointInv` (the named IH body), `jointChain_iff`, `noPrem_of_mintValueBound`,
+  `noPrem_recur_of_stepFloor` (Theorem T's recur half from the carried `LoopBInv`).
+
+**What is still open, named once instead of six times:** the `recur` obligation needs four
+carried invariants that `Reach` does not supply — `LoopBInv` (labels of residual members ≥
+running bound), `ChildStoreTight` (label↔store accuracy), `ChildFloor` (settled completeness),
+`StepSplit` (coverage). Each has a documented reason it is not free from `Run`/`Reach` alone:
+`Reach` carries only `WalkInv` (`Structural.reach_sound`), `CallPre`/`ChildOf` producers do not
+exist as reachability facts, `LabelKey` is refuted at engine states
+(`PremLabelKey.labelKey_refuted_at_engine_state`), and the leaf instance of the floor is
+equivalent to `NoAbandonedBelow`, which `CallPre + baseRun_lemma31` do not force
+(`MintPreFloor.base_leaf_counterexample`). Closing these is the audit's Lemma W/V/Rep machinery
+for a real engine semantics; `a4_joint`/`theoremT` therefore keep their `sorry`s, with the
+obligation set now stated in one place.
+
+**Axiom count: unchanged — 89 declarations audited, 6 on `sorryAx`** (`a4_joint`,
+`lemma37Star`, `theoremT`, `a4_contract`, `top_full_facts`, `top_exact_at`), all traced to
+`Main.lean:65`/`:80`. The new module adds 6 axiom-clean declarations.
