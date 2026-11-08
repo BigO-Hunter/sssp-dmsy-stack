@@ -353,7 +353,18 @@ c fo'` (the seed-restricted cousins of `LoopBInv`/`ChildLabelFloor`), take `st.b
 `istep_bp_mono_of_liveFloor`, read the unchanged-label case through `sweepEvts_label_cases` with
 `LoopBInv B st`, and floor the changed-label case by the gate (`lo = Bi = c.B ≥ st'.bp` via the
 monotonicity).  Still missing for `LabelFloorHyp`: the assembly itself, plus the sources of
-`LiveFloor`/`SeedChildFloor` at reachable steps — the next session's slices.
+`LiveFloor`/`SeedChildFloor` at reachable steps.
+
+**DETERMINATION 2 (sourcing): `LiveFloor` is (c) — refuted in-tree; `SeedChildFloor` is (a) at
+full leaves, unsourced at capped returns.**  `LiveFloor.st'_not_liveFloor` is a formalized `¬
+LiveFloor st'` at a genuine step, so the `istep_bp_mono_of_liveFloor` route is dead at general
+steps.  `SeedChildFloor c co` (`∃ v ∈ c.S, dis v ≤ co.B'`, paper (R5)) **is** discharged in the
+full-leaf regime: `KeyLabFloor.seedChildLabFloor_of_bound_eq` gives it from `B' = c.B` +
+`CallPre.inRange`; no producer is named at capped returns.  Net: half 2's monotonicity is
+available exactly where the child's returned bound equals the separator (full leaves); the
+capped case is `CORRECTED_PROOF` §8-item-5 class — either prove `BpChain` at capped exits as its
+own slice, or carry `SeedFloor`/`SeedChildFloor` as the named premises (the containR/2≤t
+pattern; recommendation for the repo owner recorded here).
 -/
 
 /-! ## 4. The residual, stated once

@@ -414,3 +414,19 @@ sources the first from `LiveFloor st` (`istep_seedFloor`). Half 2's assembly: ca
 Also registered: wound **2125609282** (containR base instance possibly false at child level-0
 returns; sketch-grade, formalizing it is the named next step). **Axiom count: unchanged — 89
 audited, 6 on `sorryAx`** (doc-only change to a compiled module).
+
+---
+
+## Determination 2: LiveFloor refuted in-tree; SeedChildFloor sourced at full leaves (2026-11-08, session 14)
+
+`JointInduction` §3d.2 determination 2: **`LiveFloor` is (c) — refuted in-tree**
+(`LiveFloor.st'_not_liveFloor : ¬ LiveFloor st'` at a genuine step), so the
+`istep_bp_mono_of_liveFloor` route to half 2's monotonicity is dead at general steps.
+**`SeedChildFloor` is (a) at full leaves**: `KeyLabFloor.seedChildLabFloor_of_bound_eq`
+discharges it from `B' = c.B` + `CallPre.inRange`; no producer is named at capped returns.
+Net: half 2's monotonicity is available exactly where the child's returned bound equals the
+separator (full leaves); the capped case is `CORRECTED_PROOF` §8-item-5 class — prove `BpChain`
+at capped exits as its own slice, or carry `SeedFloor`/`SeedChildFloor` as named premises
+(containR/2≤t pattern; recommendation recorded in §3d.2 for the repo owner).
+
+**Axiom count: unchanged — 89 audited, 6 on `sorryAx`** (doc-only change to a compiled module).
