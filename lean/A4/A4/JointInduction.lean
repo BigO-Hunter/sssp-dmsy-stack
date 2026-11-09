@@ -423,6 +423,31 @@ theorem sweep_untouched_label (B : WLab G s) (u : Fin G.n) (es : List (Fin G.m))
     · rw [if_neg hs, if_neg hs]
       exact ih d D y (fun e' he' => htouch e' (List.mem_cons_of_mem e he'))
 
+/-! ### 3d.3. The LoopBInv wave map (landed 2026-11-08; proofs are the next slices)
+
+Producing `ChildLabelFloor st fo'` at one `IStep` splits by the group's pivot:
+
+* **S1 — pivot-pulled groups (inductive, not a premise).**  If `piv j ∈ Si`, `y ∈ st.pl j`, and
+  `st.d y < Bi`, then `y ∈ c.S` (`mem_expand_of_group_low` + `seed_of_expand_mem`, landed).  With
+  soundness (`dis y ≤ c.d' y`), `c.d' y < fo'.B'` for contradiction, and OnPath reflexivity, the
+  seed's canonical path visits `c.S`, so `y ∈ Ũ(fo'.B', c.S)`; the child's `Lemma37Concl.identity`
+  gives `y ∈ U ∪ K` with `K = ∅` (`NoPrem`), i.e. `y` is settled — contradicting the floor's
+  "y ∉ settled" hypothesis.  Premises: the child's `Lemma37Concl` + `NoPrem` — the joint
+  induction's own IH (inductive, never a free-standing hypothesis).
+* **S2 — pivot-not-pulled groups (split by label persistence).**  *Changed* labels are floored by
+  the gate: `lo = Bi ≥ st'.bp = fo'.B'` via `run_le_bound` (free).  *Unchanged* labels need
+  `BpChain`'s increasing direction — `CORRECTED_PROOF` §8-item-5 — **named premise**, repo-owner
+  two-out (prove `BpChain`-at-step vs. carry it; recommendation: same class as the `2 ≤ t` and
+  containR decisions).
+
+**Assembly:** `istep_bInv` consumes S1+S2 (+ the child's bound law) → `iloop_bInv` →
+`prem_empty_recur`/`run_mintFloor` → Theorem T's recur half → seam 2 via `theoremT_of_labelFloorHyp`
++ `theoremT_split`.
+
+**S1's first-read checklist** (vocabulary not yet verified): the `Sound` producer for `fo'.d'`
+(likely the child's `WalkInv` via `run_entry_honest`), an `OnPath` reflexivity lemma, the exact
+`Utilde` membership form, and `carveKeys_empty` under `NoPrem` (exists in `Main`). -/
+
 /-! ## 4. The residual, stated once
 
 `StepFloor` is everything §8.1's Lemma W/V package delivers at one iteration, in the form
