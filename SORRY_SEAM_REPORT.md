@@ -498,3 +498,14 @@ paths** — the fix is `split` (for the standalone `relaxEdge` lemma) and restor
 `if_pos`/`if_neg` rewrites (for the sweep induction). Regime-split receipt in the docstring: at
 base leaves this is the only persistence half available (A1's sweep is ungated); the gated form
 is the recur-side sweep's.
+
+---
+
+## S1 drafted: verification starved by host SIGTERMs — draft in WIP (2026-11-08, session 20)
+
+`childLabelFloor_low_pulled` (S1's full assembly per §3d.2's checklist) was written and taken
+through two compile cycles; the remaining error after two fixes was a single stale identifier
+(`hlt''` → `hlt'`, fixed in the working tree) whose verification compile was again killed.  The
+draft is **reverted out of the tree** per discipline; its exact text (with the `hlt'` fix
+applied) is preserved in this session's transcript and is a one-compile landing for the next
+session.  Route unchanged (all four checklist forms found; on paper complete).
