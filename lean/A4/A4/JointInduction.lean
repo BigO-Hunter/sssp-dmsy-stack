@@ -444,9 +444,25 @@ Producing `ChildLabelFloor st fo'` at one `IStep` splits by the group's pivot:
 `prem_empty_recur`/`run_mintFloor` → Theorem T's recur half → seam 2 via `theoremT_of_labelFloorHyp`
 + `theoremT_split`.
 
-**S1's first-read checklist** (vocabulary not yet verified): the `Sound` producer for `fo'.d'`
-(likely the child's `WalkInv` via `run_entry_honest`), an `OnPath` reflexivity lemma, the exact
-`Utilde` membership form, and `carveKeys_empty` under `NoPrem` (exists in `Main`). -/
+**S1's first-read checklist — ALL FOUR FOUND (2026-11-08, read done; S1 is writable):**
+
+* (a) `Sound` producer: `WalkInv.sound : WalkInv d → Sound d`; the child's return labels are
+  walks via `child_mono_walk_of_run t hchild` (gives `fo'.d' v ≤ c.d v ∧ WalkInv fo'.d'`).
+* (b) `OnPath` reflexivity: **`onPath_self (h : G.Reachable s v) : OnPath v v`** exists
+  (`CHD.WalkOrder`).
+* (c) `Utilde B S := {v | dis v < B ∧ ∃ y ∈ S, OnPath y v}` — membership is
+  `⟨hlt, ⟨y, hyS, honpath⟩⟩`; with `y ∈ c.S` and `y = y` the witness is `y` itself (needs
+  `G.Reachable s y`, see (d)).
+* (d) `carveKeys_empty` under `NoPrem` — confirmed (`Main`, used by `top_full_facts`).
+
+**(d′) the one remaining extraction:** `WalkInv d := ∀ v p, d v = toW p → G.IsWalk s v p` gives
+`G.IsWalk s y p` for a finite label, and S1's `onPath_self` needs `G.Reachable s y` — the
+`IsWalk → Reachable` step (one lemma; almost surely exists or is one line).  **S1 on paper:**
+for a pivot-pulled group member `y` with `st.d y < Bi`, unsettled at the child's return:
+`y ∈ c.S` (`seed_of_expand_mem`) → `dis y ≤ fo'.d' y < fo'.B'` (soundness + contradiction
+hypothesis) → `y ∈ Ũ(fo'.B', c.S)` (reflexivity + reachability) → `identity` + `NoPrem`
+(`carveKeys = ∅`) → `y ∈ U` = settled — contradiction.  The `st.d y ≥ Bi` members are half 2
+(unchanged = BpChain-at-step named premise; changed = gate). -/
 
 /-! ## 4. The residual, stated once
 
