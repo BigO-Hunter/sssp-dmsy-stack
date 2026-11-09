@@ -464,6 +464,39 @@ hypothesis) → `y ∈ Ũ(fo'.B', c.S)` (reflexivity + reachability) → `identi
 (`carveKeys = ∅`) → `y ∈ U` = settled — contradiction.  The `st.d y ≥ Bi` members are half 2
 (unchanged = BpChain-at-step named premise; changed = gate). -/
 
+/-- **S1 — the pivot-pulled case of `ChildLabelFloor`** (the first recur-side body): a
+residual-group member whose label is below the separator, in a group whose pivot is pulled, that
+the child did **not** settle must carry a returned label `≥ fo'.B'`.  Route: `y ∈ c.S`
+(`seed_of_expand_mem`) + soundness + the contradiction hypothesis give `y ∈ Ũ(fo'.B', c.S)`
+(`onPath_self` + `WalkInv`'s reachability extraction); the child's `identity` with
+`carveKeys = ∅` (`NoPrem`) then forces `y ∈ U` = settled — contradiction. -/
+theorem childLabelFloor_low_pulled {t : ℕ} {G : Graph} {s : Fin G.n}
+    {d : Labels G s} {p : ℕ} {pl : Fin p → Finset (Fin G.n)} {piv : Fin p → Fin G.n}
+    {Si : Finset (Fin G.n)} {Bi : WLab G s} {c : CallEntry G s} {fo' : CallOut G s}
+    {l : ℕ} (hc : c = ⟨Bi, expand d pl piv Si Bi, l - 1, d⟩)
+    (hsw : WalkInv fo'.d')
+    (hconcl : Lemma37Concl (Full t) c fo')
+    (hnoPrem : ∀ x val, ¬ fo'.Premature x val)
+    {j : Fin p} {y : Fin G.n} (hpiv : piv j ∈ Si) (hmem : piv j ∈ pl j)
+    (hypl : y ∈ pl j) (hlt : d y < Bi)
+    (huns : y ∉ settledSet fo'.evts) :
+    fo'.B' ≤ fo'.d' y := by
+  by_contra hge
+  have hlt' : fo'.d' y < fo'.B' := lt_of_not_ge hge
+  have hsnd : Sound (fo'.d') := WalkInv.sound hsw
+  have hdis : dis (s := s) y ≤ fo'.d' y := hsnd y
+  have hltB : dis (s := s) y < fo'.B' := hdis.trans_lt hlt'
+  have hyS : y ∈ c.S := seed_of_expand_mem hc hpiv hmem hypl hlt
+  have hfne : fo'.d' y ≠ (⊤ : WLab G s) := ne_top_of_lt (lt_of_lt_of_le hlt' le_top)
+  obtain ⟨p, hp⟩ := WithTop.ne_top_iff_exists.mp hfne
+  have hreach : G.Reachable s y := ⟨p, hsw y p hp.symm⟩
+  have hop : OnPath (s := s) y y := onPath_self hreach
+  have hymem : y ∈ Utilde (fo'.B') (c.S : Set (Fin G.n)) := ⟨hltB, y, hyS, hop⟩
+  have hU : y ∈ fo'.U := by
+    rw [hconcl.identity, carveKeys_empty hnoPrem c.S, Set.diff_empty]
+    exact hymem
+  exact absurd hU huns
+
 /-! ## 4. The residual, stated once
 
 `StepFloor` is everything §8.1's Lemma W/V package delivers at one iteration, in the form
@@ -483,6 +516,7 @@ end Frontier
 /-! ## 5. Axiom audit -/
 
 #print axioms Frontier.DMSY.relaxEdge_untouched_label
+#print axioms Frontier.DMSY.childLabelFloor_low_pulled
 #print axioms Frontier.DMSY.sweep_untouched_label
 #print axioms Frontier.DMSY.istep_unpack
 #print axioms Frontier.DMSY.seed_of_expand_mem

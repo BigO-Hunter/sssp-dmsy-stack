@@ -509,3 +509,21 @@ through two compile cycles; the remaining error after two fixes was a single sta
 draft is **reverted out of the tree** per discipline; its exact text (with the `hlt'` fix
 applied) is preserved in this session's transcript and is a one-compile landing for the next
 session.  Route unchanged (all four checklist forms found; on paper complete).
+
+---
+
+## S1 LANDED: `childLabelFloor_low_pulled` (2026-11-08, session 21)
+
+**The first recur-side body is proved.** `JointInduction.childLabelFloor_low_pulled` (axiom-clean
+`[propext, Classical.choice, Quot.sound]`, `lake build` green 2032 jobs): a residual-group member
+whose label is below the separator, in a group whose pivot is pulled, that the child did not
+settle must carry a returned label `≥ fo'.B'`. Route per §3d.2: seeds (`seed_of_expand_mem`) →
+soundness (`WalkInv.sound`) → `Ũ` membership (`onPath_self` + the `WalkInv` reachability
+extraction `⟨p, hsw y p hp.symm⟩`) → `identity` + `carveKeys_empty` under `NoPrem` → settled —
+contradiction. Three mechanical fixes were needed past the transcript draft (`trans_lt` chains,
+`ne_top_of_lt`'s inequality direction, `hp.symm`); all found by detached builds.
+
+Still open for `LabelFloorHyp`: half 2 (pivot-not-pulled members — changed labels floored by the
+gate; unchanged labels = `BpChain`-at-step, the recorded two-out) + the assembly.
+**Axiom count: unchanged — 89 audited, 6 on `sorryAx`** (S1 is a premise-side body; the count
+falls at the recur assembly).
