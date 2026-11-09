@@ -486,3 +486,15 @@ error: `JointInduction.lean:417:10: No goals to be solved` — at the `by_cases 
 Everything else in the module is clean. Next session: restructure h1's by-block (e.g. prove the
 update equation as a standalone `have` before the `by_cases`, or use `split` instead of
 `by_cases`) — 15 minutes, mechanical. The lemma stays OUT of the tree until it compiles.
+
+---
+
+## Part (i) LANDED: sweep_untouched_label (2026-11-08, session 19)
+
+`JointInduction.relaxEdge_untouched_label` + `sweep_untouched_label` (axiom-clean, build green
+2032 jobs): untouched-member persistence for A1's ungated sweep. The root cause of the three
+failed attempts was found: **`by_cases` consumed the goal's `if` branches on some elaboration
+paths** — the fix is `split` (for the standalone `relaxEdge` lemma) and restoring the
+`if_pos`/`if_neg` rewrites (for the sweep induction). Regime-split receipt in the docstring: at
+base leaves this is the only persistence half available (A1's sweep is ungated); the gated form
+is the recur-side sweep's.

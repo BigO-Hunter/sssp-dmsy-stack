@@ -391,6 +391,38 @@ now with the sharpened note that both regimes reduce to the same missing input: 
 persistence under gated sweeps below the running bound**.
 -/
 
+/-- **Part (i), standalone**: a vertex that is not the destination of a relaxation keeps its
+label (`relaxEdge`'s accept branch writes only the head). -/
+theorem relaxEdge_untouched_label {B : WLab G s} {d : Labels G s} {D : DS G s} {e : Fin G.m}
+    {y : Fin G.n} (hd : G.dst e ≠ y) : (relaxEdge B d D e).1 y = d y := by
+  unfold relaxEdge
+  split
+  · dsimp only
+    exact Function.update_of_ne (Ne.symm hd) (ext (d (G.src e)) e) d
+  · rfl
+
+/-- **Part (i) — untouched-member persistence for A1's ungated sweep**: a vertex that is the
+destination of no swept edge keeps its label.  **Regime-split receipt:** at base leaves this is
+the *only* persistence half available — A1's sweep is ungated (accept = `cand ≤ d dst ∧ cand
+< B`), so a *touched* member's label can drop arbitrarily far below the running bound; the gated
+form (unchanged-or-`≥ lo`) is the recur-side `RState` sweep's (`sweepEvts_label_cases`). -/
+theorem sweep_untouched_label (B : WLab G s) (u : Fin G.n) (es : List (Fin G.m)) :
+    ∀ (d : Labels G s) (D : DS G s) (y : Fin G.n),
+      (∀ e ∈ es, G.dst e ≠ y) → (sweep B u es d D).1 y = d y := by
+  induction es with
+  | nil => intro d D y _; rfl
+  | cons e es ih =>
+    intro d D y htouch
+    rw [sweep]
+    by_cases hs : G.src e = u
+    · rw [if_pos hs, if_pos hs]
+      have hd : G.dst e ≠ y := htouch e List.mem_cons_self
+      rw [ih (relaxEdge B d D e).1 (relaxEdge B d D e).2 y
+        (fun e' he' => htouch e' (List.mem_cons_of_mem e he')),
+        relaxEdge_untouched_label hd]
+    · rw [if_neg hs, if_neg hs]
+      exact ih d D y (fun e' he' => htouch e' (List.mem_cons_of_mem e he'))
+
 /-! ## 4. The residual, stated once
 
 `StepFloor` is everything §8.1's Lemma W/V package delivers at one iteration, in the form
@@ -409,6 +441,8 @@ end Frontier
 
 /-! ## 5. Axiom audit -/
 
+#print axioms Frontier.DMSY.relaxEdge_untouched_label
+#print axioms Frontier.DMSY.sweep_untouched_label
 #print axioms Frontier.DMSY.istep_unpack
 #print axioms Frontier.DMSY.seed_of_expand_mem
 #print axioms Frontier.DMSY.mem_expand_of_group_low
