@@ -23,7 +23,7 @@ Well-formed inputs only: `fpRun` carries the call precondition `CallPre` (A0's `
 leaves no hypothesis slot, so reachability of the entry state — CORRECTED_PROOF §2.3 — is baked
 into the judgment).  Empty `S` is uninhabited (`Y ≠ ∅`), so `A2Contract` is vacuous there.
 
-**Size note (wound R2125608269).**  The pinned `A2Contract` caps the *total* pivot members
+**Size note.**  The pinned `A2Contract` caps the *total* pivot members
 `|⋃ P_j| ≤ k`; the paper's Lemma 3.2 bounds each group (`|P_j| = O(k)`), leaving `|S ∖ Q|`
 unbounded, and its `W` has size `O(k·|Q|)`.  A verbatim Algorithm 2 cannot satisfy the pinned
 cap; this semantics is the contract-satisfying variant (gate set ≤ `k`, complementary region

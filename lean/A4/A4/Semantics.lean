@@ -359,8 +359,7 @@ def Full (t : ℕ) (e : CallEntry G s) (out : CallOut G s) : Prop :=
 /-! ## Reachable-state closure (CORRECTED_PROOF §2.3, Q9 fix) -/
 
 /-- `c` is the entry of a recursive call (BM.13) made by `e`'s Algorithm-3 run: the loop of
-`e`'s `l > 0` spine iterated through `c`.  The witnesses are **tied to one `recur` derivation**
-(wound R2125608361): the `Run` witness is exactly the `recur` conclusion at these components
+`e`'s `l > 0` spine iterated through `c`.  The witnesses are **tied to one `recur` derivation**: the `Run` witness is exactly the `recur` conclusion at these components
 (`out = callOut (tail e.B e.S fo.W stf)`), and the loop's child returns are required to be
 genuine `Run`s — the exact shape `childOf_of_recur` builds.  The untied form admitted a `Run`
 witness unrelated to the `ILoop` witness and junk (non-run) child returns, which blocked

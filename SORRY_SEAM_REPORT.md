@@ -1,7 +1,13 @@
 # A4 Axiom Audit — SORRY Seam Report
 
 **Date:** 2026-11-05
-**Build:** full `lake build` of A4 green — 2028 jobs, exit 0. Log: `/private/tmp/sssp_a4_glm_recovery.log`.
+**Build:** full `lake build` of A4 green — 2028 jobs, exit 0 (local receipt, 2026-11-05; CI rebuilds the full umbrella on every push).
+
+**Current coordinates (HEAD):** the two A4 `sorry`s are at `A4/A4/Main.lean:80`
+(`a4_joint`) and `:95` (`theoremT`) — the `2 ≤ t` docstring (2026-11-08) shifted both
+by +15; dated entries below cite the pre-shift `:65`/`:80`. Repo-wide there is a third
+`sorry`: the placeholder `DInputs.hsp` witness at `D/D/Adapter.lean:363` (outside this
+report's A4 audit scope; see `lean/SUBMISSION.md` and the README).
 
 ## Principal theorems
 

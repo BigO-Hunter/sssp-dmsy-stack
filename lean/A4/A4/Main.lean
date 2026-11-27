@@ -102,7 +102,7 @@ theorem a4_contract (t : ℕ) (ht : 2 ≤ t) (G : Graph) (s : Fin G.n) :
 
 /-! ## Top-level support: labels stay `⊤` off the reachable set, keys never drop
 
-Two mechanical invariants consumed by top-level exactness (R2125608334):
+Two mechanical invariants consumed by top-level exactness:
 
 * `UnreachTop` — a label at a vertex unreachable from `s` stays `⊤`.  This is the minimal form of
   "unreachable vertices stay `⊤` by label soundness": A4 carries no `WalkInv` preservation chain
@@ -264,7 +264,7 @@ theorem iloop_unreach (t : ℕ) (B : WLab G s) (l : ℕ) :
     exact istep_unreach hstep
       (hkids _ List.mem_cons_self (by rw [istep_entry_d hstep]; exact hst))
 
-/-- `Run` preserves `UnreachTop` on the entry labels (R2125608334's mechanical half). -/
+/-- `Run` preserves `UnreachTop` on the entry labels (the mechanical half). -/
 theorem run_unreach (t : ℕ) : ∀ {e : CallEntry G s} {out : CallOut G s},
     Run t e out → UnreachTop e.d → UnreachTop out.d' := by
   intro e out h
@@ -476,7 +476,7 @@ is unsatisfiable (`Run := fun _ _ => False` refutes it).  The intended statement
 instantiation at A4's own judgments (as `A4Contract` takes them as parameters); that version is
 pinned and targeted below as `TopExactAt`.
 
-**Statement repair (R2125608333).**  Two further ingredients had to become explicit antecedents:
+**Statement repair.**  Two further ingredients had to become explicit antecedents:
 
 * `TopFull` — the (E3) guard's **full-execution delivery** at top.  A run that exits the loop by
   event overflow returns `B' < ⊤` and leaves unsettled vertices incomplete, so
@@ -499,7 +499,7 @@ from `initLabels` returns labels complete for every vertex; `isSSSP_of_complete`
 `labelLen_dis` (A0 `Basic`) give `G.IsSSSP s (fun v => labelLen (out.d' v))`.  Takes the
 engine's **totality judgment** (`Total`, the `∃ out, Run top out` step — the relational
 semantics admits derivations but does not derive their existence) and the **full-execution
-delivery** (`TopFull`, R2125608333) as explicit antecedents.  Proved from the joint chain's
+delivery** (`TopFull`) as explicit antecedents.  Proved from the joint chain's
 identity clause at `B = ⊤` + Theorem T (`a4_joint`), Lemma 3.1* at base returns (A1), and the
 weak label invariant `UnreachTop` (unreachable vertices stay `⊤`). -/
 def TopExactAt (t : ℕ) : Prop :=

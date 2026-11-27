@@ -40,7 +40,7 @@ function of `Run`.
 5. `improvementProvenance_of_full` — full executions have no low mints, so `ImprovementProvenance`
    holds there *without any trace*; this closes the seam for the top-level call (always full) and
    for every full return.
-6. `mint_key_mem_seed` — a mint's key is a member of the call's seed set `e.S` (R2125608424),
+6. `mint_key_mem_seed` — a mint's key is a member of the call's seed set `e.S`,
    the `ChainGround.seedWalked` source.
 
 The one remaining obligation is `RunTraceCert` (below): every `Run` *admits* such a certifying
@@ -129,7 +129,7 @@ def TraceProv (e : CallEntry G s) (out : CallOut G s) (tr : Trace G s) : Prop :=
         ChainGround e out ground m.x ∧
         ProvenanceEnd out ground groundVal m
 
-/-- **Extraction theorem** (R2125608423): a trace-level provenance certificate is a full
+/-- **Extraction theorem**: a trace-level provenance certificate is a full
 `ImprovementProvenance`.  The contiguous `RelaxStep` list is turned into an `ImproveChain` by
 `chain_of_contigFrom`; the ground/ending are already the `ChainGround`/`ProvenanceEnd`
 components.  This is the only place the acceptance-time history enters — once supplied, the
@@ -143,7 +143,7 @@ theorem improvementProvenance_of_traceProv (t : ℕ) (e : CallEntry G s) (out : 
 
 /-! ## Full executions need no trace -/
 
-/-- **Full executions are immune** (R2125608423, the full-execution regime): a drained `𝒟` means
+/-- **Full executions are immune** (the full-execution regime): a drained `𝒟` means
 the final iteration minted nothing, so `Prem = ∅` (`full_no_prem`) and there is no low mint to
 witness — `ImprovementProvenance` holds vacuously with no acceptance history.  The top-level call
 is always full (CORRECTED_PROOF §3, (E3)), so the head of the recursion is discharged here. -/
@@ -152,9 +152,9 @@ theorem improvementProvenance_of_full (t : ℕ) (e : CallEntry G s) (out : CallO
   intro m hm hlt
   exact (full_no_prem t e out h m.x m.val ⟨hm, hlt⟩).elim
 
-/-! ## Seed ground (R2125608424) -/
+/-! ## Seed ground -/
 
-/-- **A mint's key is a seed** (R2125608424): FindPivots' groups are subsets of `S` (FP2), the
+/-- **A mint's key is a seed**: FindPivots' groups are subsets of `S` (FP2), the
 residual groups only shrink along the loop (`iloop_pl_sub`), and every mint's key stays in its
 residual group (`iloop_mints_pl`).  This is the `ChainGround.seedWalked` source — the fact that
 justifies *choosing* a seed ground; the chain from that ground to the mint is the trace content

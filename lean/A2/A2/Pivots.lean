@@ -11,7 +11,7 @@ groups `P₁ … P_p` partitioning `Y`, the residual `Q = S ∖ Y`, and the comp
 gated by a complete pivot on its canonical path (FP1).  The gated region is what the parent
 call's children are seeded with.
 
-Size note (wound R2125608269): the lane's pinned `A2Contract` caps the *total* pivot members
+Size note: the lane's pinned `A2Contract` caps the *total* pivot members
 `|⋃ P_j| ≤ k`; the paper's Lemma 3.2 caps each group only (`|P_j| = O(k)`, union `|S ∖ Q|`).
 This output phase is the contract-satisfying variant: a ≤ `k`-sized gate set with the
 complementary region completed by the search phase (`A2.Search`).

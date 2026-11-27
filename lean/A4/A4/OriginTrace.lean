@@ -28,7 +28,7 @@ What remains open is the descent *below* a child's own logged history: A2's `fpR
 `baseRun` log no acceptance trace, so a label's passage from FindPivots or base-run labels to
 the call's entry labels is unwitnessed — instrumenting those two runs is the exact missing
 field.  Nothing here assumes a settled/seed ground conclusion, and no `RunTraceCert` axiom is
-introduced; the ground split (R2125608423/R2125608424) stays open.
+introduced; the ground split stays open.
 -/
 
 namespace Frontier

@@ -1226,7 +1226,7 @@ theorem top_run_sound (t : ℕ) {out : CallOut G s}
     (hrun : Run t ⟨(⊤ : WLab G s), {s}, lTop t G.n, initLabels G s⟩ out) : Sound out.d' :=
   run_sound t hrun initLabels_walk
 
-/-! ## Sound labels at every `Reach` entry (wound R2125608361's payoff)
+/-! ## Sound labels at every `Reach` entry
 
 The tying fix in `A4.Semantics.ChildOf` — one `recur` derivation, its own `hchildren` — makes
 this true: a reachable child entry's labels are the loop-state labels of a genuine derivation,

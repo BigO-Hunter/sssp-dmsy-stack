@@ -45,17 +45,20 @@ exact on every graph and source, within `C · Time` on sparse graphs and
 
 ## Axiom audit
 
-`#print axioms Race.bound` (D/Bound.lean:256, emitted in `lake build Submission`):
+`#print axioms Race.bound_lane` (D/Bound.lean:258, emitted in `lake build Submission`):
 
 ```
-'Race.bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Race.bound_lane' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 
-**No `sorryAx`.** The sparse clause is carried as the hypothesis `DInputs.hsp`, so
-`Race.bound` is unconditional on the three standard Lean axioms only. The known 3
-`sorry`s live in `A4/A4/Main.lean` (joint-chain seam, CORRECTED_PROOF §8.1 —
-`a4_joint` / `lemma37Star` / Theorem-T completeness); they are worked separately
-and do not appear in `Race.bound`'s axiom closure.
+The abstract bound is axiom-clean: the sparse clause is carried as the hypothesis
+`DInputs.hsp`. The **exported** `Race.bound` (D/Adapter.lean:389) currently depends
+on `sorryAx` (CI-verified): its `DInputs` witness uses a placeholder `hsp`
+(`by sorry`, D/Adapter.lean:363, body `Stmt.skip`) until package C's per-call cost
+body lands. Repo-wide there are exactly three `sorry` sites: `A4/A4/Main.lean:80`
+(`a4_joint`) and `:95` (`theoremT`) — the CORRECTED_PROOF §8.1 joint-chain seam,
+which `lemma37Star` and the top-level facts consume — plus the Adapter placeholder.
+Discharging the Adapter witness and closing the A4 seam makes `Race.bound` sorry-free.
 
 ## Build
 

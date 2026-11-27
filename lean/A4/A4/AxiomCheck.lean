@@ -51,7 +51,7 @@ Expected axioms for every entry below: `propext`, `Classical.choice`, `Quot.soun
 **A4 status (honest, 2026-11-04):** the semantics, the local half, the transitive proposition,
 and the size chapter (Lemma 3.8\* at weakened-but-true statements, Lemma R at the (E3)
 certificate — see `A4.Size`) are complete and axiom-clean.  2026-11-04 (blocker chip): the
-`ChildOf` witness tying (wound R2125608361) landed with `reach_sound`/`reach_entry_sound`;
+`ChildOf` witness tying landed with `reach_sound`/`reach_entry_sound`;
 Lemma 3.6's pull instantiation (`istep_child_frontier`), Lemma 3.5's seed-size propagation
 (`childOf_seed_size`, `childOf_seed_memCap`), and `BoundaryClosure`'s entry-level discharge
 (`boundaryClosure_of_CallPre`) are proved and axiom-clean — the joint induction's child
@@ -61,7 +61,7 @@ carried as `a4_joint`'s `sorry` and consumed by `lemma37Star`/`theoremT`/`a4_con
 top-level `top_exact_at` is now **proved** (no `sorry` of its own) from `a4_joint`/`theoremT`,
 Lemma 3.1\* at base returns, and the weak label invariant `UnreachTop` — modulo the joint-chain
 seam it consumes.  Its antecedents are the totality judgment `Total` and the (E3) guard's
-full-execution delivery `TopFull` (R2125608333: under event semantics the guard counts duplicate
+full-execution delivery `TopFull` (under event semantics the guard counts duplicate
 settlements, so `eventCap_lTop` alone cannot deliver no-overflow; the delivery rides the audit's
 duplicate-excess bound and is pinned as a judgment).  Entries touching the seam report `sorryAx`;
 everything else is axiom-clean.  Which is which is recorded next to each entry.
@@ -86,7 +86,7 @@ everything else is axiom-clean.  Which is which is recorded next to each entry.
 #print axioms Frontier.DMSY.run_walk
 #print axioms Frontier.DMSY.top_run_sound
 
--- axiom-clean (wound R2125608361: tied ChildOf — sound labels at every Reach entry)
+-- axiom-clean (tied ChildOf — sound labels at every Reach entry)
 #print axioms Frontier.DMSY.reach_sound
 #print axioms Frontier.DMSY.reach_entry_sound
 
