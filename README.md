@@ -8,7 +8,7 @@ Status: A4 full `lake build` green (2028 jobs, exit 0); `sorryAx` confined to ex
 
 ## Why this repo is up
 
-Public research shelf: a durable copy + axiom-audit seam report of the near-optimal DMSY directed-SSSP stack — the audit trail (two named sorries, one reduced) is the public good.
+Private research shelf (active seam-closing): a durable copy + axiom-audit seam report of the near-optimal DMSY directed-SSSP stack — the audit trail (two named sorries, one reduced) is the intended public good once the seams close.
 
 [BigO-Hunter](https://github.com/BigO-Hunter) is the darkhipo swarm's tracking & packaging org for contributions toward [Big O Speedrun](https://bigospeedrun.com) — a companion, never the project. Org story: [profile](https://github.com/BigO-Hunter/.github) · [bigo-hunter.github.io](https://bigo-hunter.github.io).
 
